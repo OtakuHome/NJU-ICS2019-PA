@@ -41,6 +41,19 @@ void reg_test() {
 }
 
 void isa_reg_display() {
+	int i;
+	for(i = R_EAX; i <= R_EDI; ++ i) {
+		printf("%s: %#x  ", regsl[i], reg_l(i));
+	}
+	printf("\n");
+	for(i = R_AX; i <= R_DI; ++ i){
+		printf("%s: %#x  ", regsw[i], reg_w(i));
+	}
+	printf("\n");
+	for(i = R_AL; i <= R_BH; ++ i){
+		printf("%s: %#x  ", regsb[i], reg_b(i));
+	}
+	printf("\n");
 }
 
 uint32_t isa_reg_str2val(const char *s, bool *success) {
