@@ -30,7 +30,7 @@ static struct rule {
   {"-", '-'},			// substract
   {"\\*", '*'},			// multiply
   {"/", '/'},			// divide
-  {"\\d+", TK_NUM},		// number
+  {"[0-9]+", TK_NUM},		// number
   {"\\(", '('},			// left bracket
   {"\\)", ')'}			// right bracket
 };
