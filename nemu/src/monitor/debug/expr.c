@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
+  TK_NOTYPE = 256, TK_EQ, TK_INT
 
   /* TODO: Add more token types */
 
@@ -22,9 +22,17 @@ static struct rule {
    * Pay attention to the precedence level of different rules.
    */
 
+  /* TODO: PA1.5 */
+
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
+  {"==", TK_EQ},        // equal
+  {"-", '-'},			// substract
+  {"\\*", '*'},			// multiply
+  {"/", '/'},			// divide
+  {"\\d+", TK_INT},		// integer
+  {"\\(", '('},			// left bracket
+  {"\\)", ')'}			// right bracket
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -73,14 +81,30 @@ static bool make_token(char *e) {
         Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
         position += substr_len;
-
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
+		/* TODO: PA1.5 */
+		
+		if(substr_len >= 32){
+			printf("%.*s  The length of the substring is too long.\n", substr_len, substr_start);
+			return false;
+		}
 
+		if(nr_token > 31) {
+			printf("The count of tokens(nr_token) is out of the maximum count(32)");
+			return false;
+		}
         switch (rules[i].token_type) {
-          default: TODO();
+			case TK_NOTYPE:
+				break;
+			case TK_INT:
+				strncpy(tokens[nr_token].str, substr_start, substr_len);
+				tokens[nr_token].str[substr_len] = '\0';
+			default: 
+				tokens[nr_token].type = rules[i].token_type;
+				++ nr_token;
         }
 
         break;

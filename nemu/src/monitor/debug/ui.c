@@ -100,7 +100,7 @@ static struct {
   { "si","Format: si [N]\n"\
     "     Execute the program with N(default: 1) step", cmd_si },
   { "info", "Format: info [rf]\n"\
-	"       r: Print the values of all registers\n", cmd_info },
+	"       r: Print the values of all registers", cmd_info },
   { "x", "Format: x N EXPR\n" \
 	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x }
 
