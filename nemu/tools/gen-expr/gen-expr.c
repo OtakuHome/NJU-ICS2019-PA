@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <string.h>
 
-#define NR_TOKEN 600
+#define NR_TOKEN 500
 #define MAXNUM 1000
 
 // this should be enough

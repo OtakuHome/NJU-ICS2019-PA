@@ -62,7 +62,8 @@ typedef struct token {
 } Token;
 
 /* TODO: Change the size of the Token array for test */
-static Token tokens[600] __attribute__((used)) = {};
+#define NR_TOKEN 600
+static Token tokens[NR_TOKEN] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
@@ -94,7 +95,7 @@ static bool make_token(char *e) {
 			return false;
 		}
 
-		if(nr_token > 31) {
+		if(nr_token >= NR_TOKEN) {
 			printf("The count of tokens(nr_token) is out of the maximum count(32)\n");
 			return false;
 		}
