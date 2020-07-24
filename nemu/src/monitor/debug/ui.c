@@ -2,13 +2,15 @@
 #include "monitor/expr.h"
 #include "monitor/watchpoint.h"
 #include "nemu.h"
+#include "cpu/exec.h"
 
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
-
+void isa_reg_display();
+uint32_t instr_fetch(vaddr_t *pc, int len);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -38,6 +40,58 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+/* PA1.3 */
+static int cmd_si(char *args){	
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL){
+		cpu_exec(1);
+		return 0;
+	}
+	
+	char ch;
+	uint64_t n = 0;
+	while(*arg != '\0')
+	{
+		ch = *arg++;
+		if(ch < '0' || ch > '9'){
+			printf("Input format error");
+			return 0;
+		}
+		n = n * 10 + (ch - '0');
+	}
+	if(n == 0) n = 1;
+	cpu_exec(n);
+	return 0;
+}
+
+/* PA1.3 */
+static int cmd_info(char *args){
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL) return 0;
+	if(arg[0] == 'r'){
+		isa_reg_display();
+	}
+
+	return 0;
+}
+
+/* PA1.3 */
+static int cmd_x(char *args){
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL) return 0;
+	int n = 0, i;
+	sscanf(arg, "%d", &n);
+	arg = strtok(NULL, " ");
+	if(arg == NULL) return 0;
+	uint32_t expr;
+	sscanf(arg, "%x", &expr);
+	for(i = 0; i < n; ++ i){
+		printf("%#x: ", expr);
+		printf("%#x\n", instr_fetch(&expr, 4));
+	}
+	return 0;
+}
+
 static struct {
   char *name;
   char *description;
@@ -46,6 +100,14 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  /* PA1.3 */
+  { "si","Format: si [N]\n"\
+    "     Execute the program with N(default: 1) step", cmd_si },
+  { "info", "Format: info [rf]\n"\
+	"       r: Print the values of all registers", cmd_info },
+  { "x", "Format: x N EXPR\n" \
+	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x }
+
 
   /* TODO: Add more commands */
 
