@@ -83,8 +83,8 @@ static int cmd_x(char *args){
 	uint32_t expr;
 	sscanf(arg, "%x", &expr);
 	for(i = 0; i < n; ++ i){
-		printf("%x: ", expr);
-		printf("%x\n", instr_fetch(&expr, 4));
+		printf("%#x: ", expr);
+		printf("%#x\n", instr_fetch(&expr, 4));
 	}
 	return 0;
 }
