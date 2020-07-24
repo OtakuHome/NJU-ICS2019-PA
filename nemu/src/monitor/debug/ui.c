@@ -40,6 +40,7 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+/* PA1.3 */
 static int cmd_si(char *args){	
 	char *arg = strtok(NULL, " ");
 	if(arg == NULL){
@@ -63,6 +64,7 @@ static int cmd_si(char *args){
 	return 0;
 }
 
+/* PA1.3 */
 static int cmd_info(char *args){
 	char *arg = strtok(NULL, " ");
 	if(arg == NULL) return 0;
@@ -73,6 +75,7 @@ static int cmd_info(char *args){
 	return 0;
 }
 
+/* PA1.3 */
 static int cmd_x(char *args){
 	char *arg = strtok(NULL, " ");
 	if(arg == NULL) return 0;
@@ -97,6 +100,7 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  /* PA1.3 */
   { "si","Format: si [N]\n"\
     "     Execute the program with N(default: 1) step", cmd_si },
   { "info", "Format: info [rf]\n"\
