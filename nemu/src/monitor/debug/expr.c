@@ -121,7 +121,9 @@ static bool make_token(char *e) {
   return true;
 }
 
-/* TODO: PA1.5 */
+/* PA1.5
+ * Date: 2020/7/24
+ */
 
 /*  return 1  if the parentheses is a valid expression with left and right bracket.
  *  return 0  if the parentheses is a valid expression but without left and right bracket.
@@ -259,5 +261,5 @@ uint32_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
 
-  return 0;
+  return eval(0, nr_token - 1, success);
 }
