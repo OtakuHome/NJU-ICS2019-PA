@@ -81,9 +81,9 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si","Format: si [N]\n"\
-    "      Execute the program with N(default: 1) step", cmd_si },
+    "     Execute the program with N(default: 1) step", cmd_si },
   { "info", "Format: info [rf]\n"\
-	"      r: Print the values of all registers\n", cmd_info }
+	"       r: Print the values of all registers\n", cmd_info }
 
 
   /* TODO: Add more commands */
