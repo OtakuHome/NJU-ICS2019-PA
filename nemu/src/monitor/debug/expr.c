@@ -94,7 +94,7 @@ static bool make_token(char *e) {
 		}
 
 		if(nr_token > 31) {
-			printf("The count of tokens(nr_token) is out of the maximum count(32)");
+			printf("The count of tokens(nr_token) is out of the maximum count(32)\n");
 			return false;
 		}
         switch (rules[i].token_type) {
@@ -261,5 +261,7 @@ uint32_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
 
-  return eval(0, nr_token - 1, success);
+  uint32_t ret = eval(0, nr_token - 1, success);
+
+  return ret;
 }
