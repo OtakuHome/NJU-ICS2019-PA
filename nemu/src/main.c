@@ -8,7 +8,7 @@ void ui_mainloop(int);
  */
 void test_expr()
 {
-	FILE *fp = fopen("../tools/input", "r");
+	FILE *fp = fopen("tools/gen_expr/input", "r");
 	if(fp == NULL) {
 		Log("File: %s open failed\n", "../tools/input");
 		return ;
