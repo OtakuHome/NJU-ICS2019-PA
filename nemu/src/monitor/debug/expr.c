@@ -135,15 +135,27 @@ int check_parentheses(int p, int q)
 	if(tokens[p].type == '(' && tokens[q].type ==')') LR = true;
 	char stack[36];
 	int top = 0, i;
-	for(i = p; i < q; ++ i){
+	for(i = p; i <= q; ++ i){
 		if(tokens[i].type == '(') stack[++ top] = '(';
 		else if(tokens[i].type == ')') {
 			if(top > 0 && stack[top] == '(') --top;
 			else return -1;	
 		}
 	}
-	if(LR) return 1;
-	return 0;
+	if(!LR) return 0;
+
+	/* Judge such case like: (4 + 5) - (6 - 1)  */
+	top = 0;
+	for(i = p + 1; i <= q - 1; ++ i){
+		if(tokens[i].type == '(') stack[++ top] = '(';
+		else if(tokens[i].type == ')') {
+			if(top > 0 && stack[top] == '(') --top;
+			else return 0;	
+		}
+		
+	}
+
+	return 1;
 }
 
 bool isOp(int ch){
