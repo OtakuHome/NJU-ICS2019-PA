@@ -9,7 +9,7 @@
 
 void cpu_exec(uint64_t);
 void isa_reg_display();
-
+uint32_t instr_fetch(vaddr_t *pc, int len);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -72,6 +72,22 @@ static int cmd_info(char *args){
 	return 0;
 }
 
+static int cmd_x(char *args){
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL) return 0;
+	int n = 0, i;
+	sscanf(arg, "%d", &n);
+	arg = strtok(NULL, " ");
+	if(arg == NULL) return 0;
+	uint32_t expr;
+	sscanf(arg, "%x", &expr);
+	for(i = 0; i < n; ++ i){
+		printf("%x: ", expr);
+		printf("%x\n", instr_fetch(&expr, 4));
+	}
+	return 0;
+}
+
 static struct {
   char *name;
   char *description;
@@ -83,7 +99,9 @@ static struct {
   { "si","Format: si [N]\n"\
     "     Execute the program with N(default: 1) step", cmd_si },
   { "info", "Format: info [rf]\n"\
-	"       r: Print the values of all registers\n", cmd_info }
+	"       r: Print the values of all registers\n", cmd_info },
+  { "x", "Format: x N EXPR\n" \
+	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x }
 
 
   /* TODO: Add more commands */
