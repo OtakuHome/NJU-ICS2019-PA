@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_INT
+  TK_NOTYPE = 256, TK_EQ, TK_NUM
 
   /* TODO: Add more token types */
 
@@ -30,7 +30,7 @@ static struct rule {
   {"-", '-'},			// substract
   {"\\*", '*'},			// multiply
   {"/", '/'},			// divide
-  {"\\d+", TK_INT},		// integer
+  {"\\d+", TK_NUM},		// number
   {"\\(", '('},			// left bracket
   {"\\)", ')'}			// right bracket
 };
@@ -85,6 +85,7 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
+
 		/* TODO: PA1.5 */
 		
 		if(substr_len >= 32){
@@ -99,7 +100,7 @@ static bool make_token(char *e) {
         switch (rules[i].token_type) {
 			case TK_NOTYPE:
 				break;
-			case TK_INT:
+			case TK_NUM:
 				strncpy(tokens[nr_token].str, substr_start, substr_len);
 				tokens[nr_token].str[substr_len] = '\0';
 			default: 
@@ -120,6 +121,136 @@ static bool make_token(char *e) {
   return true;
 }
 
+/* TODO: PA1.5 */
+
+/*  return 1  if the parentheses is a valid expression with left and right bracket.
+ *  return 0  if the parentheses is a valid expression but without left and right bracket.
+ *  return -1 if the parenteses isn't a valid expression. 
+ */
+int check_parentheses(int p, int q)
+{
+	bool LR = false;
+	if(tokens[p].type == '(' && tokens[q].type ==')') LR = true;
+	char stack[36];
+	int top = 0, i;
+	for(i = p; i < q; ++ i){
+		if(tokens[i].type == '(') stack[++ top] = '(';
+		else if(tokens[i].type == ')') {
+			if(top > 0 && stack[top] == '(') --top;
+			else return -1;	
+		}
+	}
+	if(LR) return 1;
+	return 0;
+}
+
+bool isOp(int ch){
+	return ch == '+' || ch == '-' || ch == '*' || ch == '/';
+}
+/* return the priority of the oprator*/
+int op_priority(int op)
+{
+	int pri;
+	switch(op){
+		case '+':
+		case '-':
+			pri = 1;
+			break;
+		case '*':
+		case '/':
+			pri = 2;
+			break;
+		default:
+			pri = 10;
+	}
+	return pri;
+}
+int compare(int op1, int op2){
+	int p1 = op_priority(op1);
+	int p2 = op_priority(op2);
+	return p1 < p2 ?  -1 : (p1 == p2 ? 0 : 1);
+}
+
+/* return -1 if there is no main operator */
+int get_main_op(int p, int q)
+{
+	int inBracket = 0, i, pos = -1;
+	for(i = p; i <= q; ++ i) {
+		int type = tokens[i].type;
+		if( !inBracket && isOp(type)){
+			if(pos == -1) pos = i;
+			else if(compare(type, tokens[pos].type) <= 0 ) pos = i; 
+		}
+		else if(type == '(' ) inBracket ++ ;
+		else if(type == ')' ) inBracket -- ;
+	}
+	return pos;
+}
+
+uint32_t myexit(int p, int q, bool *success){
+	printf("Invalid expression: [%d, %d]\n", p, q);
+	success = false;
+	return 0;
+}
+
+/*add a parameter to judge whether the eval is success. */
+uint32_t eval(int p, int q, bool *success)
+{
+	if(p > q) {
+		return myexit(p, q, success);
+	}else if(p == q){
+		if(tokens[p].type == TK_NUM) {
+			uint32_t val = 0;
+			sscanf(tokens[p].str, "%u", &val);
+			return val;
+		}
+		return myexit(p, q, success);
+	}
+
+	int ret = check_parentheses(p, q);
+	if(ret == -1) {
+		return myexit(p, q, success);
+	}
+	
+	if(ret == 1) {
+		return eval(p + 1, q - 1, success);
+	}
+	
+	int pos = get_main_op(p, q);
+	if(pos == -1){
+		return myexit(p, q, success);
+	}
+		
+	uint32_t val1, val2, val;
+	val1 = eval(p, pos - 1, success);
+	if(*success == 0) return 0;
+	val2 = eval(pos + 1, q, success);
+	if(*success == 0) return 0;
+
+	switch(tokens[pos].type){
+		case '+':
+			val = val1 + val2;
+			break;
+		case '-':
+			val = val1 - val2;
+			break;
+		case '*':
+			val = val1 * val2;
+			break;
+		case '/':
+			if(val2 == 0) {
+				printf("Divide 0 error at [%d, %d]", p, q);
+				return *success = false;
+			}
+			val = val1 / val2;
+			break;
+		default:
+			return myexit(p, q, success);
+	}
+
+	return val;
+}
+
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -127,7 +258,6 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
 
   return 0;
 }
