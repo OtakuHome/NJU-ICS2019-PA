@@ -93,7 +93,7 @@ static int cmd_x(char *args){
 		strcat(arg, argg);
 		argg = strtok(NULL, " ");
 	}
-	bool success;
+	bool success = true;
 	uint32_t value = expr(arg, &success);
 	if(!success) return 0;
 	for(i = 0; i < n; ++ i){
