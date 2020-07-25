@@ -87,10 +87,10 @@ static int cmd_x(char *args){
 	sscanf(arg, "%d", &n);
 	arg = strtok(NULL, " ");
 	if(arg == NULL) return 0;
-	char *argg = strtok(NULL, "");
+	char *argg = strtok(NULL, " ");
 	while(argg != NULL){
 		strcat(arg, argg);
-		argg = strtok(NULL, "");
+		argg = strtok(NULL, " ");
 	}
 	bool success;
 	uint32_t value = expr(arg, &success);
