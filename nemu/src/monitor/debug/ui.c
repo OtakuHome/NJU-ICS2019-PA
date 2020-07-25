@@ -81,6 +81,17 @@ static int cmd_info(char *args){
 	return 0;
 }
 
+static char* full_expr(){	
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL) return NULL;
+	char *argg = strtok(NULL, " ");
+	while(argg != NULL){
+		strcat(arg, argg);
+		argg = strtok(NULL, " ");
+	}
+	return arg;
+}
+
 /* PA1.3 */
 static int cmd_x(char *args){
 	char *arg = strtok(NULL, " ");
@@ -89,13 +100,8 @@ static int cmd_x(char *args){
 	sscanf(arg, "%d", &n);
 
 	/* There may be some blank spaces in the expression. */
-	arg = strtok(NULL, " ");
+	arg = full_expr();
 	if(arg == NULL) return 0;
-	char *argg = strtok(NULL, " ");
-	while(argg != NULL){
-		strcat(arg, argg);
-		argg = strtok(NULL, " ");
-	}
 
 	bool success = true;
 	uint32_t value = expr(arg, &success);
@@ -110,7 +116,7 @@ static int cmd_x(char *args){
 /* PA1.5 1.6 
  * Date: 2020/7/25
  */
-int cmd_p(char *args)
+static int cmd_p(char *args)
 {
 	if(args == NULL) return 0;
 	bool success = true;
@@ -118,6 +124,27 @@ int cmd_p(char *args)
 	if(success){
 		printf("%u - %#x\n", value, value);
 	}
+	return 0;
+}
+
+
+/* PA1.6
+ * Date: 2020/7/25
+ */
+static int cmd_w(char *args)
+{
+	char *arg = full_expr();
+	if(arg == NULL) return 0;
+	WP* wp = new_wp();
+	memset(wp->str, 0, sizeof(wp->str));
+	strcpy(wp->str, arg);
+	bool success = true;
+	wp -> value = expr(arg, &success);
+	if(!success){
+		printf("set watchpoint failed.\n");
+		free_wp(wp);
+	}
+
 	return 0;
 }
 
@@ -130,14 +157,16 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+
   /* PA1.3 */
-  { "si","Format: si [N]\n"\
+  { "si","Usage: si [N]\n"\
     "     Execute the program with N(default: 1) step", cmd_si },
-  { "info", "Format: info [rw]\n"\
-	"       r: Print the values of all registers", cmd_info },
-  { "p", "Format: p EXPR\n" "    Calculate the value of the expression EXPR\n", cmd_p},
-  { "x", "Format: x N EXPR\n" \
-	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x }
+  { "info", "Usage: info [rw]\n"\
+	"       [r]: print the values of all registers, [w]: print watchpoints", cmd_info },
+  { "p", "Usage: p [EXPR]\n" "    Calculate the value of the expression EXPR", cmd_p},
+  { "x", "Usage: x [N] [EXPR]\n" \
+	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x },
+  { "w", "Usage: w [EXPR]\n" "    set watchpoint for the [EXPR].", cmd_w }
 
 
   /* TODO: Add more commands */
