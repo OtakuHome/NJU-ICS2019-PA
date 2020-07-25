@@ -11,6 +11,8 @@
 void cpu_exec(uint64_t);
 void isa_reg_display();
 uint32_t instr_fetch(vaddr_t *pc, int len);
+uint32_t expr(char *e, bool *success); 
+
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -92,6 +94,22 @@ static int cmd_x(char *args){
 	return 0;
 }
 
+/* PA1.5 1.6 
+ * Date: 2020/7/25
+ */
+int cmd_p(char *agrs)
+{
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL) return 0;
+	bool success = true;
+	uint32_t value = expr(arg, &success);
+	if(success){
+		printf("%u\n", value);
+	}
+	return 0;
+}
+
+
 static struct {
   char *name;
   char *description;
@@ -105,6 +123,7 @@ static struct {
     "     Execute the program with N(default: 1) step", cmd_si },
   { "info", "Format: info [rf]\n"\
 	"       r: Print the values of all registers", cmd_info },
+  { "p", "Format: p EXPR\n" "    Calculate the value of the expression EXPR\n", cmd_p},
   { "x", "Format: x N EXPR\n" \
 	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x }
 
