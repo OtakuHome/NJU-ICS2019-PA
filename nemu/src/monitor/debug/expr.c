@@ -32,13 +32,13 @@ static struct rule {
   {"-", TK_SUB},					// substract
   {"\\*", TK_MUL},					// multiply or derefrence
   {"/", TK_DIV},					// divide
+  {"0[Xx][0-9a-fA-F]+", TK_HEX},	// hex (must before the TK_NUM)
   {"[0-9]+", TK_NUM},				// number(dec)
   {"\\(", TK_LBR},					// left bracket
   {"\\)", TK_RBR},					// right bracket
-  {"0[Xx][0-9a-fA-F]+", TK_HEX},	// hex
   {"\\$[a-zA-Z]+", TK_REG},			// register
   {"&&", TK_AND},					// AND
-  {"\\|\\|", TK_OR}						// OR
+  {"\\|\\|", TK_OR}					// OR
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
