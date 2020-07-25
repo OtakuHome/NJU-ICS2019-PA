@@ -12,6 +12,8 @@ void cpu_exec(uint64_t);
 void isa_reg_display();
 uint32_t instr_fetch(vaddr_t *pc, int len);
 uint32_t expr(char *e, bool *success); 
+WP* new_wp();
+void free_wp(WP *wp);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
