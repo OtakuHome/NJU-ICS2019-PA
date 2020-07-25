@@ -86,10 +86,10 @@ void print_wp()
 		printf("There is no watchpoints!\n");
 		return;
 	}
-	printf("Num     What\n");
+	printf("Num     What     Value\n");
 	WP *p = head;
 	while(p != NULL) {
-		printf("%-8d%s\n", p -> NO, p -> str);
+		printf("%-8d%-9s%u(%#x)\n", p -> NO, p -> str, p->value, p->value);
 		if(p -> hit > 0) printf("        breakpoint already hit %d time\n", p->hit);
 		p = p -> next;
 	}

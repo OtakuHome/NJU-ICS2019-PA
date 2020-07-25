@@ -126,7 +126,7 @@ static int cmd_p(char *args)
 	bool success = true;
 	uint32_t value = expr(args, &success);
 	if(success){
-		printf("%u - %#x\n", value, value);
+		printf("%u(%#x)\n", value, value);
 	}
 	return 0;
 }
