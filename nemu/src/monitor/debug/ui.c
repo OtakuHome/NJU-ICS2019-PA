@@ -85,7 +85,8 @@ static int cmd_x(char *args){
 	if(arg == NULL) return 0;
 	int n = 0, i;
 	sscanf(arg, "%d", &n);
-	printf("cmd_x n: %d\n", n);
+
+	/* There may be some blank spaces in the expression. */
 	arg = strtok(NULL, " ");
 	if(arg == NULL) return 0;
 	char *argg = strtok(NULL, " ");
@@ -93,6 +94,7 @@ static int cmd_x(char *args){
 		strcat(arg, argg);
 		argg = strtok(NULL, " ");
 	}
+
 	bool success = true;
 	uint32_t value = expr(arg, &success);
 	if(!success) return 0;
