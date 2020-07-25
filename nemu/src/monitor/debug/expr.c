@@ -350,8 +350,8 @@ uint32_t expr(char *e, bool *success) {
    
   for(i = 0; i < nr_token; ++ i){
 	if(tokens[i].type == TK_MUL && (i == 0 || is_op(tokens[i - 1].type))){
-		if(i > 0 && tokens[i - 1].type != TK_DEREF)	// Maybe this case: **
-	    tokens[i].type = TK_DEREF;
+		if(i == 0 || tokens[i - 1].type != TK_DEREF)	// Maybe this case: **
+			tokens[i].type = TK_DEREF;
 	}
   }
 
