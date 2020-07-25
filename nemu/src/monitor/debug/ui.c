@@ -85,6 +85,7 @@ static int cmd_x(char *args){
 	if(arg == NULL) return 0;
 	int n = 0, i;
 	sscanf(arg, "%d", &n);
+	printf("cmd_x n: %d\n", n);
 	arg = strtok(NULL, " ");
 	if(arg == NULL) return 0;
 	char *argg = strtok(NULL, " ");
