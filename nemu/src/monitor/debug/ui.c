@@ -145,7 +145,7 @@ static int cmd_w(char *args)
 	bool success = true;
 	wp -> value = expr(arg, &success);
 	if(!success){
-		printf("set watchpoint failed.\n");
+		printf("set watchpoint failed. Please check your exprssion!\n");
 		free_wp(wp);
 	}
 	wp -> hit = 0;

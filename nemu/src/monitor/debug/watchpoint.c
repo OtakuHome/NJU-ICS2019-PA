@@ -107,5 +107,5 @@ bool del_wp(int n)
 		}
 	}
 	
-	return p == NULL;
+	return p != NULL;
 }
