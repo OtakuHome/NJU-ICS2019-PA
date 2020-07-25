@@ -58,3 +58,54 @@ void free_wp(WP *wp){
 	free_ = wp;
 }
 
+bool check_wp()
+{
+	bool changed = false;
+    WP *wp = head;
+	while(wp != NULL){
+		bool success = true;
+		uint32_t new_val = expr(wp -> str, &success);
+		Assert(success, "watchpoint expr must be success.\n");		
+		if(new_val != wp -> value){
+			printf("Watchpoint %d: %s\n", wp->NO, wp->str);
+			printf("Old value = %u\n", wp->value);
+			printf("New value = %u\n",  new_val);
+			Log("");
+			changed = true;
+			wp -> value = new_val;
+			wp -> hit ++ ;
+		}
+		wp = wp -> next;
+	}
+	return changed;
+}
+
+void print_wp()
+{
+	if(head == NULL) {
+		printf("There is no watchpoints!\n");
+		return;
+	}
+	printf("Num     What\n");
+	WP *p = head;
+	while(p != NULL) {
+		printf("%-8d%s\n", p -> NO, p -> str);
+		if(p -> hit > 0) printf("        breakpoint already hit %d time\n", p->hit);
+		p = p -> next;
+	}
+}
+
+bool del_wp(int n)
+{
+	WP *p = head;
+	while(p != NULL){
+		if(p -> NO == n){
+			free_wp(p);
+			break;
+		}else{
+			p = p -> next;
+		}
+	}
+	
+	return p == NULL;
+}

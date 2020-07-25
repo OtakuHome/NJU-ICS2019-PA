@@ -14,6 +14,8 @@ uint32_t instr_fetch(vaddr_t *pc, int len);
 uint32_t expr(char *e, bool *success); 
 WP* new_wp();
 void free_wp(WP *wp);
+void print_wp();
+bool del_wp(int n);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -67,14 +69,16 @@ static int cmd_si(char *args){
 	return 0;
 }
 
+
+
 /* PA1.3 */
 static int cmd_info(char *args){
 	char *arg = strtok(NULL, " ");
 	if(arg == NULL) return 0;
 	if(strcmp(arg, "r") == 0){
 		isa_reg_display();
-	}else if(strcmp(arg, "f") == 0 ){
-			
+	}else if(strcmp(arg, "w") == 0 ){
+		print_wp();
 	}else{
 		printf("Unknown command '%s'\n", arg); 
 	}
@@ -144,11 +148,21 @@ static int cmd_w(char *args)
 		printf("set watchpoint failed.\n");
 		free_wp(wp);
 	}
+	wp -> hit = 0;
 
 	return 0;
 }
 
-
+static int cmd_d(char *args)
+{
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL) return 0;
+	int n = 0;
+	sscanf(arg, "%d", &n);
+	if(!del_wp(n)) printf("Delete failed: %d is not exist!\n", n);
+	else printf("Delete success!\n");
+	return 0;
+}
 static struct {
   char *name;
   char *description;
@@ -166,8 +180,8 @@ static struct {
   { "p", "Usage: p [EXPR]\n" "    Calculate the value of the expression EXPR", cmd_p},
   { "x", "Usage: x [N] [EXPR]\n" \
 	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x },
-  { "w", "Usage: w [EXPR]\n" "    set watchpoint for the [EXPR].", cmd_w }
-
+  { "w", "Usage: w [EXPR]\n" "    set watchpoint for the [EXPR].", cmd_w },
+  { "d", "usage: d [N]\n" "    delete watchpoint whose number is N", cmd_d}
 
   /* TODO: Add more commands */
 
