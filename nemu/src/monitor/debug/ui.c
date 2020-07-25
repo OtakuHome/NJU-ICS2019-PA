@@ -97,12 +97,11 @@ static int cmd_x(char *args){
 /* PA1.5 1.6 
  * Date: 2020/7/25
  */
-int cmd_p(char *agrs)
+int cmd_p(char *args)
 {
-	char *arg = strtok(NULL, " ");
-	if(arg == NULL) return 0;
+	if(args == NULL) return 0;
 	bool success = true;
-	uint32_t value = expr(arg, &success);
+	uint32_t value = expr(args, &success);
 	if(success){
 		printf("%u\n", value);
 	}
