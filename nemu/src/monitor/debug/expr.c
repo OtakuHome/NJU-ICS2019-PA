@@ -38,7 +38,7 @@ static struct rule {
   {"0[Xx][0-9a-fA-F]+", TK_HEX},	// hex
   {"\\$[a-zA-Z]+", TK_REG},			// register
   {"&&", TK_AND},					// AND
-  {"||", TK_OR}						// OR
+  {"\\|\\|", TK_OR}						// OR
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -238,7 +238,7 @@ uint32_t eval(int p, int q, bool *success)
 		}
 		else if(type == TK_REG) {
 			val = isa_reg_str2val(tokens[p].str + 1, success);
-			if(success) return val;
+			if(*success) return val;
 			printf("Unknown register: %s\n", tokens[p].str);
 			return 0; 
 		}
@@ -294,7 +294,8 @@ uint32_t eval(int p, int q, bool *success)
 			val = val1 == val2;
 			break;
 		case TK_DEREF:
-			
+			val = vaddr_read(val2, 4);
+			break;	
 		default:
 			printf("Unknown token type: %d\n", tokens[pos].type);
 			return *success = false;
