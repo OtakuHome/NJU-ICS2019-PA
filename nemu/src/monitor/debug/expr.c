@@ -52,7 +52,6 @@ void init_regex() {
   int i;
   char error_msg[128];
   int ret;
-
   for (i = 0; i < NR_REGEX; i ++) {
     ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
     if (ret != 0) {
@@ -221,7 +220,14 @@ int get_main_op(int p, int q)
 
 uint32_t myexit(int p, int q, bool *success){
 	printf("Invalid expression: [%d, %d]\n", p, q);
-	success = false;
+	for(; p <= q; ++ p){
+		int type = tokens[p].type;
+		printf("%d: %d", p, type);
+		if(type == TK_NUM || type == TK_HEX || type == TK_REG)
+			printf("- %s",tokens[p].str);
+		printf("\n");
+	}	
+	*success = false;
 	return 0;
 }
 
