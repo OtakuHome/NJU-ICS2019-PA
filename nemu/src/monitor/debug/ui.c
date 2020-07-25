@@ -52,8 +52,7 @@ static int cmd_si(char *args){
 	
 	char ch;
 	uint64_t n = 0;
-	while(*arg != '\0')
-	{
+	while(*arg != '\0'){
 		ch = *arg++;
 		if(ch < '0' || ch > '9'){
 			printf("Input format error");
@@ -70,10 +69,13 @@ static int cmd_si(char *args){
 static int cmd_info(char *args){
 	char *arg = strtok(NULL, " ");
 	if(arg == NULL) return 0;
-	if(arg[0] == 'r'){
+	if(strcmp(arg, "r") == 0){
 		isa_reg_display();
+	}else if(strcmp(arg, "f") == 0 ){
+			
+	}else{
+		printf("Unknown command '%s'\n", arg); 
 	}
-
 	return 0;
 }
 
@@ -85,11 +87,17 @@ static int cmd_x(char *args){
 	sscanf(arg, "%d", &n);
 	arg = strtok(NULL, " ");
 	if(arg == NULL) return 0;
-	uint32_t expr;
-	sscanf(arg, "%x", &expr);
+	char *argg = strtok(NULL, "");
+	while(argg != NULL){
+		strcat(arg, argg);
+		argg = strtok(NULL, "");
+	}
+	bool success;
+	uint32_t value = expr(arg, &success);
+	if(!success) return 0;
 	for(i = 0; i < n; ++ i){
-		printf("%#x: ", expr);
-		printf("%#x\n", instr_fetch(&expr, 4));
+		printf("%#x: ", value);
+		printf("%#x\n", instr_fetch(&value, 4));
 	}
 	return 0;
 }
@@ -120,7 +128,7 @@ static struct {
   /* PA1.3 */
   { "si","Format: si [N]\n"\
     "     Execute the program with N(default: 1) step", cmd_si },
-  { "info", "Format: info [rf]\n"\
+  { "info", "Format: info [rw]\n"\
 	"       r: Print the values of all registers", cmd_info },
   { "p", "Format: p EXPR\n" "    Calculate the value of the expression EXPR\n", cmd_p},
   { "x", "Format: x N EXPR\n" \
