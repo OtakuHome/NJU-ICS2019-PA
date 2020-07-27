@@ -55,7 +55,7 @@ $(OBJ_DIR)/%.o: src/%.c
 
 # Some convenient rules
 
-.PHONY: app run gdb clean run-env $(QEMU_SO)
+.PHONY: app run gdb count clean run-env $(QEMU_SO)
 app: $(BINARY)
 
 override ARGS ?= -l $(BUILD_DIR)/nemu-log.txt
@@ -79,7 +79,12 @@ run: run-env
 gdb: run-env
 	$(call git_commit, "gdb")
 	gdb -s $(BINARY) --args $(NEMU_EXEC)
-
+count:
+	@echo "Counting the number if lines of the codes(.c .h)"
+	@echo ".c and .h codes with blank lines:"
+	@find ./ -name "*.[ch]" | xargs cat | wc -l 
+	@echo ".c and .h codes without blank lines:"
+	@find ./ -name "*.[ch]" | xargs cat | grep -v ^$$ | wc -l
 clean:
 	-rm -rf $(BUILD_DIR)
 	$(MAKE) -C tools/gen-expr clean
