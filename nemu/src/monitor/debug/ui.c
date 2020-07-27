@@ -11,6 +11,12 @@
 void cpu_exec(uint64_t);
 void isa_reg_display();
 uint32_t instr_fetch(vaddr_t *pc, int len);
+uint32_t expr(char *e, bool *success); 
+WP* new_wp();
+void free_wp(WP *wp);
+void print_wp();
+bool del_wp(int n);
+
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -50,8 +56,7 @@ static int cmd_si(char *args){
 	
 	char ch;
 	uint64_t n = 0;
-	while(*arg != '\0')
-	{
+	while(*arg != '\0'){
 		ch = *arg++;
 		if(ch < '0' || ch > '9'){
 			printf("Input format error");
@@ -64,15 +69,31 @@ static int cmd_si(char *args){
 	return 0;
 }
 
+
+
 /* PA1.3 */
 static int cmd_info(char *args){
 	char *arg = strtok(NULL, " ");
 	if(arg == NULL) return 0;
-	if(arg[0] == 'r'){
+	if(strcmp(arg, "r") == 0){
 		isa_reg_display();
+	}else if(strcmp(arg, "w") == 0 ){
+		print_wp();
+	}else{
+		printf("Unknown command '%s'\n", arg); 
 	}
-
 	return 0;
+}
+
+static char* full_expr(){	
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL) return NULL;
+	char *argg = strtok(NULL, " ");
+	while(argg != NULL){
+		strcat(arg, argg);
+		argg = strtok(NULL, " ");
+	}
+	return arg;
 }
 
 /* PA1.3 */
@@ -81,17 +102,67 @@ static int cmd_x(char *args){
 	if(arg == NULL) return 0;
 	int n = 0, i;
 	sscanf(arg, "%d", &n);
-	arg = strtok(NULL, " ");
+
+	/* There may be some blank spaces in the expression. */
+	arg = full_expr();
 	if(arg == NULL) return 0;
-	uint32_t expr;
-	sscanf(arg, "%x", &expr);
+
+	bool success = true;
+	uint32_t value = expr(arg, &success);
+	if(!success) return 0;
 	for(i = 0; i < n; ++ i){
-		printf("%#x: ", expr);
-		printf("%#x\n", instr_fetch(&expr, 4));
+		printf("%#x: ", value);
+		printf("%#x\n", instr_fetch(&value, 4));
 	}
 	return 0;
 }
 
+/* PA1.5 1.6 
+ * Date: 2020/7/25
+ */
+static int cmd_p(char *args)
+{
+	if(args == NULL) return 0;
+	bool success = true;
+	uint32_t value = expr(args, &success);
+	if(success){
+		printf("%u(%#x)\n", value, value);
+	}
+	return 0;
+}
+
+
+/* PA1.6
+ * Date: 2020/7/25
+ */
+static int cmd_w(char *args)
+{
+	char *arg = full_expr();
+	if(arg == NULL) return 0;
+	WP* wp = new_wp();
+	memset(wp->str, 0, sizeof(wp->str));
+	strcpy(wp->str, arg);
+	bool success = true;
+	wp -> value = expr(arg, &success);
+	if(!success){
+		printf("set watchpoint failed. Please check your exprssion!\n");
+		free_wp(wp);
+	}
+	wp -> hit = 0;
+
+	return 0;
+}
+
+static int cmd_d(char *args)
+{
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL) return 0;
+	int n = 0;
+	sscanf(arg, "%d", &n);
+	if(!del_wp(n)) printf("Delete failed: %d is not exist!\n", n);
+	else printf("Delete success!\n");
+	return 0;
+}
 static struct {
   char *name;
   char *description;
@@ -100,14 +171,17 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  /* PA1.3 */
-  { "si","Format: si [N]\n"\
-    "     Execute the program with N(default: 1) step", cmd_si },
-  { "info", "Format: info [rf]\n"\
-	"       r: Print the values of all registers", cmd_info },
-  { "x", "Format: x N EXPR\n" \
-	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x }
 
+  /* PA1.3 */
+  { "si","Usage: si [N]\n"\
+    "     Execute the program with N(default: 1) step", cmd_si },
+  { "info", "Usage: info [rw]\n"\
+	"       [r]: print the values of all registers, [w]: print watchpoints", cmd_info },
+  { "p", "Usage: p [EXPR]\n" "    Calculate the value of the expression EXPR", cmd_p},
+  { "x", "Usage: x [N] [EXPR]\n" \
+	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x },
+  { "w", "Usage: w [EXPR]\n" "    set watchpoint for the [EXPR].", cmd_w },
+  { "d", "usage: d [N]\n" "    delete watchpoint whose number is N", cmd_d}
 
   /* TODO: Add more commands */
 
