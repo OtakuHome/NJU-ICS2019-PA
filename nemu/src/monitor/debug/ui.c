@@ -111,8 +111,8 @@ static int cmd_x(char *args){
 	uint32_t value = expr(arg, &success);
 	if(!success) return 0;
 	for(i = 0; i < n; ++ i){
-		printf("%#x: ", value);
-		printf("%#x\n", instr_fetch(&value, 4));
+		printf("%#08x: ", value);
+		printf("%#08x\n", instr_fetch(&value, 4));
 	}
 	return 0;
 }
@@ -126,7 +126,7 @@ static int cmd_p(char *args)
 	bool success = true;
 	uint32_t value = expr(args, &success);
 	if(success){
-		printf("%u(%#x)\n", value, value);
+		printf("%u(%#08x)\n", value, value);
 	}
 	return 0;
 }
