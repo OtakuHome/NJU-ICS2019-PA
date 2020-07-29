@@ -163,6 +163,7 @@ static int cmd_d(char *args)
 	else printf("Delete success!\n");
 	return 0;
 }
+
 static struct {
   char *name;
   char *description;
