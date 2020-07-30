@@ -36,7 +36,37 @@ typedef struct {
 
 	vaddr_t pc;
 
+	/* PA 2.1
+	 * Date: 2020/7/30
+	 */
+	union {
+		struct {
+			uint32_t CF : 1;		// 1
+			uint32_t dummy0 : 1;
+			uint32_t PF : 1;
+			uint32_t dummy1 : 1;
+			uint32_t AF : 1;
+			uint32_t dummy2 : 1;
+			uint32_t ZF : 1;		// 1
+			uint32_t SF : 1;		// 1
+			uint32_t TF : 1;	
+			uint32_t IF : 1;		// 1
+			uint32_t DF : 1;
+			uint32_t OF : 1;		// 1
+			uint32_t OLIP : 2;
+			uint32_t NT : 1;
+			uint32_t dummy3 : 1;
+			uint32_t RF : 1;
+			uint32_t VM : 1;
+			uint32_t dummy4 : 14;
+		};
+		uint32_t val;
+	} eflags;
+
 } CPU_state;
+
+
+
 
 static inline int check_reg_index(int index) {
   assert(index >= 0 && index < 8);
@@ -46,6 +76,7 @@ static inline int check_reg_index(int index) {
 #define reg_l(index) (cpu.gpr[check_reg_index(index)]._32)
 #define reg_w(index) (cpu.gpr[check_reg_index(index)]._16)
 #define reg_b(index) (cpu.gpr[check_reg_index(index) & 0x3]._8[index >> 2])
+#define reg_f(flag)	 (cpu.eflags.flag)
 
 static inline const char* reg_name(int index, int width) {
   extern const char* regsl[];

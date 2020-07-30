@@ -10,3 +10,7 @@ make_EHelper(nemu_trap);
 
 // control.c
 make_EHelper(call);
+
+// arith.c
+make_EHelper(sub);
+
