@@ -1,6 +1,7 @@
 #include "cpu/exec.h"
-
+// data-move.c
 make_EHelper(mov);
+make_EHelper(push);
 
 make_EHelper(operand_size);
 
