@@ -14,3 +14,5 @@ make_EHelper(call);
 // arith.c
 make_EHelper(sub);
 
+// logic.c
+make_EHelper(xor);
