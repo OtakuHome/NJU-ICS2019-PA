@@ -67,7 +67,6 @@ void cpu_exec(uint64_t n) {
 	bool changed = check_wp();
 	if(changed){
 		nemu_state.state = NEMU_STOP;
-		return ;	
 	}
 
 
