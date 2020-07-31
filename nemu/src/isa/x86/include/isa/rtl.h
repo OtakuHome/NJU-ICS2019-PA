@@ -48,15 +48,8 @@ static inline void rtl_is_sub_overflow(rtlreg_t* dest,
   if(sign(src1, width) == sign(src2, width)) *dest = 0;
   else{
     // transform to signed integer
-  	int32_t res_s, src_s;
-  	rtl_sext((rtlreg_t *)&res_s, res, width);
-	rtl_sext((rtlreg_t *)&src_s, src1, width);
-	if(res_s < 0) res_s *= -1;
-	if(src_s < 0) src_s *= -1;
-	int32_t ret = res_s + src_s;
-	// add two positive integer, if result if less than 0, it's overflow
-	if(ret < 0) *dest = 1;		
-	else *dest = 0;
+  	if(sign(res, width) != sign(src1, width) ) *dest = 1;	// or sign(res) == sign(src2)
+  	else *dest = 0;
   }
 }
 

@@ -9,9 +9,6 @@ make_EHelper(add) {
 make_EHelper(sub) {
   rtl_sub(&s0, &id_dest->val, &id_src->val);
   
-  id_dest -> val = s0;
-  operand_write(id_dest, &s0);
-  
   if (id_dest->width != 4) {
     rtl_andi(&s0, &s0, 0xffffffffu >> ((4 - id_dest->width) * 8));
   }
@@ -26,6 +23,9 @@ make_EHelper(sub) {
   // update OF
   rtl_is_sub_overflow(&s1, &s0, &id_dest->val, &id_src->val, id_dest->width);
   rtl_set_OF(&s1);
+  
+  id_dest -> val = s0;
+  operand_write(id_dest, &s0);
   
   print_asm_template2(sub);
 }
