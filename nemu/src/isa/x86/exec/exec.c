@@ -20,7 +20,7 @@ static make_EHelper(name) { \
 
 /* 0x80, 0x81, 0x83 */
 make_group(gp1,
-    EMPTY, EMPTY, EMPTY, EMPTY,
+    EX(add), EMPTY, EMPTY, EMPTY,
     EX(and), EX(sub), EMPTY, EMPTY)
 
 /* 0xc0, 0xc1, 0xd0, 0xd1, 0xd2, 0xd3 */
@@ -67,10 +67,10 @@ static OpcodeEntry opcode_table [512] = {
   /* 0x34 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x38 */	IDEXW(G2E, cmp, 1), IDEX(G2E, cmp), IDEXW(E2G, cmp, 1), IDEX(E2G, cmp),
   /* 0x3c */	IDEXW(I2a, cmp, 1), IDEX(I2a, cmp), EMPTY, EMPTY,
-  /* 0x40 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x44 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x48 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x4c */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x40 */	IDEX(r, inc), IDEX(r, inc), IDEX(r, inc), IDEX(r, inc),
+  /* 0x44 */	IDEX(r, inc), IDEX(r, inc), IDEX(r, inc), IDEX(r, inc),
+  /* 0x48 */	IDEX(r, dec), IDEX(r, dec), IDEX(r, dec), IDEX(r, dec),
+  /* 0x4c */	IDEX(r, dec), IDEX(r, dec), IDEX(r, dec), IDEX(r, dec),
   /* 0x50 */	IDEX(r, push), IDEX(r, push), IDEX(r, push), IDEX(r, push),
   /* 0x54 */	IDEX(r, push), IDEX(r, push), IDEX(r, push), IDEX(r, push),
   /* 0x58 */	EMPTY, EMPTY, EMPTY, EMPTY,
