@@ -22,6 +22,7 @@ make_EHelper(nemu_trap);
 make_EHelper(call);
 make_EHelper(ret);
 make_EHelper(jcc);
+make_EHelper(jmp);
 
 // arith.c
 make_EHelper(sub);
