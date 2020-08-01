@@ -17,6 +17,7 @@ make_EHelper(ret);
 // arith.c
 make_EHelper(sub);
 make_EHelper(add);
+make_EHelper(cmp);
 
 // logic.c
 make_EHelper(xor);
