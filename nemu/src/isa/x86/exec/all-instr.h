@@ -2,6 +2,7 @@
 // data-move.c
 make_EHelper(mov);
 make_EHelper(push);
+make_EHelper(lea);
 
 make_EHelper(operand_size);
 
@@ -15,6 +16,7 @@ make_EHelper(ret);
 
 // arith.c
 make_EHelper(sub);
+make_EHelper(add);
 
 // logic.c
 make_EHelper(xor);
