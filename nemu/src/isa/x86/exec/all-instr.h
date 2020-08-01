@@ -14,6 +14,7 @@ make_EHelper(nemu_trap);
 // control.c
 make_EHelper(call);
 make_EHelper(ret);
+make_EHelper(jcc);
 
 // arith.c
 make_EHelper(sub);
