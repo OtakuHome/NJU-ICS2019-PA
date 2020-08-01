@@ -20,3 +20,4 @@ make_EHelper(add);
 
 // logic.c
 make_EHelper(xor);
+make_EHelper(and);
