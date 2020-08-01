@@ -146,6 +146,7 @@ make_EHelper(adc) {
   rtl_set_CF(&s0);
 
   // update OF
+  // now, s1 isn't the result of (s0 + CF)
   rtl_is_add_overflow(&s0, &s1, &id_dest->val, &id_src->val, id_dest->width);
   rtl_set_OF(&s0);
 
