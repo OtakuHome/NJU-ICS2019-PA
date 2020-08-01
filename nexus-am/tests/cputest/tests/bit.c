@@ -1,10 +1,10 @@
 #include "trap.h"
-
+#include <stdio.h>
 typedef unsigned char uint8_t;
 typedef char bool;
 __attribute__((noinline))
 bool getbit(void *buf, int offset){
-
+	printf("%d\n", offset);
 	int byte = offset >> 3;
 	offset &= 7;
 	uint8_t mask = 1 << offset;
