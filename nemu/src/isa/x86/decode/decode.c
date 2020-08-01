@@ -30,11 +30,11 @@ static inline make_DopHelper(SI) {
    * and assign it to op->simm.
    * op->simm = ???
    */
-  uint32_t simm = instr_fetch(pc, op->width);
+  s0 = instr_fetch(pc, op->width);
 
   /* if op -> width < 4, it should be signed extended to 32bit.*/
-  rtl_sext(&simm, &simm, op -> width);
-  op -> simm = simm;
+  rtl_sext(&s0, &s0, op -> width);
+  op -> simm = s0;
   
   rtl_li(&op->val, op->simm);
 
