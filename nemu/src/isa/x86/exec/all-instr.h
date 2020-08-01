@@ -7,10 +7,14 @@ make_EHelper(movzx);
 make_EHelper(leave);
 make_EHelper(pop);
 
+// prefix.c
 make_EHelper(operand_size);
 
+// special.c
+make_EHelper(nop);
 make_EHelper(inv);
 make_EHelper(nemu_trap);
+
 
 // control.c
 make_EHelper(call);
