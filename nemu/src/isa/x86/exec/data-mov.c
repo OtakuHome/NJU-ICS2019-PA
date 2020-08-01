@@ -6,7 +6,6 @@ make_EHelper(mov) {
 }
 
 make_EHelper(push) {
-  // sign extended if width < 4 
   rtl_push(&id_dest->val);
   print_asm_template1(push);
 }
