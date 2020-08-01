@@ -47,8 +47,8 @@ static inline void rtl_is_sub_overflow(rtlreg_t* dest,
   // dest <- is_overflow(src1 - src2)
   if(sign(src1, width) == sign(src2, width)) *dest = 0;
   else{
-    // transform to signed integer
-  	if(sign(res, width) != sign(src1, width) ) *dest = 1;	// or sign(res) == sign(src2)
+    rtl_sub(&t0, src1, src2);
+  	if(sign(&t0, width) != sign(src1, width) ) *dest = 1;	// or sign(res) == sign(src2)
   	else *dest = 0;
   }
 }
@@ -64,7 +64,8 @@ static inline void rtl_is_add_overflow(rtlreg_t* dest,
   // dest <- is_overflow(src1 + src2)
   if(sign(src1, width) != sign(src2, width)) *dest = 0;
   else{
-  	if(sign(res, width) != sign(src1, width)) *dest = 1;
+    rtl_add(&t0, src1, src2);
+  	if(sign(&t0, width) != sign(src1, width)) *dest = 1;
   	else *dest = 0;
   }
 }
