@@ -43,6 +43,7 @@ int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
   int is_batch_mode = init_monitor(argc, argv);
 
+  printf("is_batch_mode: %d\n", is_batch_mode);
   /* PA1.5 test expr */
   // test_expr();
 
