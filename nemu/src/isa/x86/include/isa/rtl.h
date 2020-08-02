@@ -48,7 +48,7 @@ static inline void rtl_is_sub_overflow(rtlreg_t* dest,
   if(sign(src1, width) == sign(src2, width)) *dest = 0;
   else{
     rtl_sub(&t0, src1, src2);
-    // needn't: rtl_andi(&t0, &t0, 0xffffffffu >> ((4 - width) * 8));
+    // needn't : rtl_andi(&t0, &t0, 0xffffffffu >> ((4 - width) * 8));
   	if(sign(&t0, width) != sign(src1, width) ) *dest = 1;	// or sign(res) == sign(src2)
   	else *dest = 0;
   }
@@ -57,7 +57,7 @@ static inline void rtl_is_sub_overflow(rtlreg_t* dest,
 static inline void rtl_is_sub_carry(rtlreg_t* dest,
     const rtlreg_t* res, const rtlreg_t* src1) {
   // dest <- is_carry(src1 - src2)
-  *dest = *res == *src1;
+  *dest = *res > *src1;
 }
 
 static inline void rtl_is_add_overflow(rtlreg_t* dest,
