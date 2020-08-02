@@ -248,17 +248,16 @@ PrintNum(char * buf, unsigned long u, int base, int negFlag,
 	    *p++ = '-';
     }
     
-    //最终整个字符串要翻转
+    // finally, we will reverse the whole string
     /* figure out actual length and adjust the maximum length */
     actualLength = p - buf;
     if (length < actualLength) length = actualLength;
 
     /* add padding */
     if (ladjust) {
-	    padc = ' ';//左对齐就不能填充0
+	    padc = ' '; 
     }
     if (negFlag && !ladjust && (padc == '0')) {
-        /*右对齐，同时要填充前导0，那就填充0(把字符'-'覆盖) */
         for (i = actualLength-1; i < length-1; i++) buf[i] = padc; 
         buf[length -1] = '-';//第一位填'-'
     } else {
@@ -271,7 +270,8 @@ PrintNum(char * buf, unsigned long u, int base, int negFlag,
         int begin = 0;
         int end;
         if (ladjust) {
-            end = actualLength - 1;//如果是左对齐，只需要翻转数字部分(包括负号)
+        	//left alogn，just reverse the numbers (including the negFlag:'-' )
+            end = actualLength - 1; 
         } else {
             end = length -1;
         }
