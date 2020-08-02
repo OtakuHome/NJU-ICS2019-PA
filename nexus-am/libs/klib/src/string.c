@@ -50,10 +50,10 @@ int strcmp(const char* s1, const char* s2) {
 	//assert(*s1 == 'a');
 	//assert(*s2 == 'b');
 	
-	int ret = *s1 - *s2;
+	//int ret = *s1 - *s2;
 	
-	ret = 0;
-	assert(ret == 0);
+	//ret = 0;
+	assert(0);
 	
 	return -1;
 }
