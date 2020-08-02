@@ -180,9 +180,9 @@ static struct {
 	"       [r]: print the values of all registers, [w]: print watchpoints", cmd_info },
   { "p", "Usage: p [EXPR]\n" "    Calculate the value of the expression EXPR", cmd_p},
   { "x", "Usage: x [N] [EXPR]\n" \
-	"    Use EXPR as the starting address, and output N consecutive 4 bytes in hexadecimal form", cmd_x },
+	"    Calculate the value of the expression EXPR, and output N consecutive 4 bytes starting from EXPR in hexadecimal form", cmd_x },
   { "w", "Usage: w [EXPR]\n" "    set watchpoint for the [EXPR].", cmd_w },
-  { "d", "usage: d [N]\n" "    delete watchpoint whose number is N", cmd_d}
+  { "d", "usage: d [N]\n" "    delete watchpoint whose id is N", cmd_d}
 
   /* TODO: Add more commands */
 
