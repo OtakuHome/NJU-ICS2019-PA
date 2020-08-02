@@ -46,8 +46,8 @@ int strcmp(const char* s1, const char* s2) {
 	
 	if(*s1 == *s2)  return 0;
 	
-	assert(*s1 == 'a');
-	assert(*s2 == 'b');
+	//assert(*s1 == 'a');
+	//assert(*s2 == 'b');
 	int ret = *s1 - *s2;
 	
 	if(ret > 0) return 1;
