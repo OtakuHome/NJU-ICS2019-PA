@@ -3,94 +3,97 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 size_t strlen(const char *s) {
-	if(s == NULL) return 0;
-	size_t len = 0;
-	while( (*s ++) != '\0') ++ len;
-	return len;
+  size_t len=0;
+  while((*s++)!='\0'){
+    len++;
+  }
+  return len;
 }
 
 char *strcpy(char* dst,const char* src) {
-	if (dst == NULL || src == NULL) return dst;
-	char *r = dst;
-	while((*r ++ = *src ++) != '0') ;
-	return dst;
+  return strncpy(dst,src,strlen(src));
 }
 
 char* strncpy(char* dst, const char* src, size_t n) {
-	if (dst == NULL || src == NULL) return dst;
-	// we should notice that size_t is unsigned
-	char *r = dst;
-	size_t i = 0;
-    while(i < n && *src != '\0') {
-    	*r ++ = *src ++ ;
-    	i ++;
-    }
-	while(i ++ < n) *r ++ = '\0';
-	return dst;
+  if(n>strlen(src)){
+    n=strlen(src);
+  }
+  char *res=dst;
+  while(n && (*dst++=*src++)){
+    n--;
+  }
+  return res;
 }
 
 char* strcat(char* dst, const char* src) {
-	if (dst == NULL || src == NULL) return dst;
-	char *r = dst;
-	while(*r != '\0') ++ r;
-	while((*r ++ = *src ++) != '\0' ) ;
-	return dst;
+  char *temp=dst;
+  while(*dst){
+    dst++;
+  }
+  while((*dst++=*src++)!=0);
+  return temp; 
 }
 
 int strcmp(const char* s1, const char* s2) {
-	assert(s1 != NULL && s2 != NULL);
-	while(*s1 != '\0' && *s1 == *s2 ) {
-		s1 ++;
-		s2 ++;
-	}
-	
-	if(*s1 == *s2) return 0;
-	return *(unsigned char *)s1 - *(unsigned char *)s2 > 0 ? 1 : -1;
+  int t=0;
+  while((t=(*s1-*s2))==0 && *s1 && *s2){
+    s1++;s2++;
+  }
+  return t;
 }
 
 int strncmp(const char* s1, const char* s2, size_t n) {
-	assert(s1 != NULL && s2 != NULL);
-	int ret = 0;
-	while(n -- ) {
-		ret = *s1  - *s2;
-		if(ret != 0 || *s1 == '\0') break;
-		s1 ++;
-		s2 ++;
-	}
-	if(ret > 0) ret = 1;
-	else if(ret < 0) ret = -1;
-	return ret;
+  assert(s1!=NULL && s2!=NULL);
+  while(n--){
+    if(*s1==0 ||*s1!=*s2){
+      return *s1-*s2;
+    }
+    s1++;s2++;
+  }
+  return 0;
 }
 
 void* memset(void* v,int c,size_t n) {
-  if (v == NULL) return NULL;
-  char *r = (char *)v;
-  while(n -- ) *r ++ = c; 
+  //const unsigned char temp=c;
+  //unsigned char *s;
+  //for(s=v;n>0;++s,--n){
+  //  *s=temp;
+  //}
+  for(size_t i=0;i<n;i++){
+    ((int8_t*)v)[i]=c;
+  }
   return v;
 }
 
 void* memcpy(void* out, const void* in, size_t n) {
-	char *src = (char *)in;
-	char *dst = (char *)out;
-	assert(dst <= src || dst >= src + n );	// memory cannot overlap
-	while(n --) *dst ++ = *src ++;
-	return out;
+  char *pout=(char*)(out);
+  const char *pin=(const char*)(in);
+  if(pout>pin && pout<pin+n){
+    pout=pout+n-1;
+    pin=pin+n-1;
+    while(n--){
+      *pout--=*pin--;
+    }
+  }
+  else{
+    while(n--){
+      *pout++=*pin++;
+    }
+  }
+  return pout;
 }
 
 int memcmp(const void* s1, const void* s2, size_t n){
-	assert(s1 != NULL && s2 != NULL);
-	unsigned char *v1 = (unsigned char *)s1;
-	unsigned char *v2 = (unsigned char *)s2;
-	int ret = 0;
-	while(n -- ) {
-		ret = *v1  - *v2;
-		if(ret != 0) break;
-		v1 ++;
-		v2 ++;
-	}
-	if(ret > 0) ret = 1;
-	else if(ret < 0) ret = -1;
-	return ret;
+  assert(s1 || s2);
+  const unsigned char *s11,*s22;
+  int count=0;
+  for(s11=s1,s22=s2;n>0;++s11,++s22,n--){
+    if((count=*s11-*s22)!=0){
+      break;
+    }
+  }
+  return count;
 }
 
 #endif
+
