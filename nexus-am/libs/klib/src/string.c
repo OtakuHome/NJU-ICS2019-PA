@@ -43,8 +43,9 @@ int strcmp(const char* s1, const char* s2) {
 		s1 ++;
 		s2 ++;
 	}
-
-	return *(unsigned char *)s1 - *(unsigned char *)s2 ;
+	
+	if(*s1 == *s2) return 0;
+	return *(unsigned char *)s1 - *(unsigned char *)s2 > 0 ? 1 : -1;
 }
 
 int strncmp(const char* s1, const char* s2, size_t n) {
@@ -54,7 +55,8 @@ int strncmp(const char* s1, const char* s2, size_t n) {
 		s2 ++;
 	}
   
-	return *(unsigned char *)s1 - *(unsigned char *)s2 ;
+	if(*s1 == *s2) return 0;
+	return *(unsigned char *)s1 - *(unsigned char *)s2 > 0 ? 1 : -1;
 }
 
 void* memset(void* v,int c,size_t n) {
@@ -65,7 +67,8 @@ void* memset(void* v,int c,size_t n) {
 }
 
 void* memcpy(void* out, const void* in, size_t n) {
-	char *src = (char *)in, *dst = (char *)out;
+	char *src = (char *)in;
+	char *dst = (char *)out;
 	assert(dst <= src || dst >= src + n );	// memory cannot overlap
 	while(n --) *dst ++ = *src ++;
 	return out;
@@ -73,12 +76,15 @@ void* memcpy(void* out, const void* in, size_t n) {
 
 int memcmp(const void* s1, const void* s2, size_t n){
 	assert(s1 != NULL && s2 != NULL);
-	char *v1 = (char *)s1, *v2 = (char *)s2;
+	char *v1 = (char *)s1;
+	char *v2 = (char *)s2;
 	while(n -- && *v1  == *v2 ) {
 		v1 ++;
 		v2 ++;
 	}
-	return *(unsigned char *)v1 - *(unsigned char *)v2 ;
+	
+	if(*v1 == *v2) return 0;
+	return *(unsigned char *)v1 - *(unsigned char *)v2 > 0 ? 1 : -1;
 }
 
 #endif
