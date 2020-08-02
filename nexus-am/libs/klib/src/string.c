@@ -48,7 +48,6 @@ int strcmp(const char* s1, const char* s2) {
 	
 	int ret = *s1 - *s2;
 	
-	ret = -1;
 	if(ret > 0) return 1;
 	else return -1;
 }
