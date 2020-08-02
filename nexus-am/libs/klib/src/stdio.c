@@ -177,8 +177,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         }	/* switch (*fmt) */
 
         fmt ++;
-        //int i;
-        for(int i = 0; i < length; ++ i) {
+        int i;
+        for(i = 0; i < length; ++ i) {
         	out[total_len ++] = buf[i];
         }
         
