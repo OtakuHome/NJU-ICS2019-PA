@@ -3,7 +3,10 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 size_t strlen(const char *s) {
-  return 0;
+  assert(s);
+  size_t len = 0;
+  while( (*s++) != '\0') ++ len;
+  return len;
 }
 
 char *strcpy(char* dst,const char* src) {
