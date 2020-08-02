@@ -20,9 +20,9 @@ int printf(const char *fmt, ...) {
 	int len = vsprintf(out, fmt, ap);
 	int i;
 	for( i = 0; i < len; i ++){
-    	_putc(out[i]);
+    	//_putc(out[i]);
   	}
-	return 0;
+	return len;
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
