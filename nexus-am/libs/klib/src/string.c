@@ -50,13 +50,16 @@ int strcmp(const char* s1, const char* s2) {
 
 int strncmp(const char* s1, const char* s2, size_t n) {
 	assert(s1 != NULL && s2 != NULL);
-	while(n -- && *s1 != '\0' && *s1  == *s2 ) {
+	int ret = 0;
+	while(n -- ) {
+		ret = *s1  - *s2;
+		if(ret != 0 || *s1 == '\0') break;
 		s1 ++;
 		s2 ++;
 	}
-  
-	if(*s1 == *s2) return 0;
-	return *(unsigned char *)s1 - *(unsigned char *)s2 > 0 ? 1 : -1;
+	if(ret > 0) ret = 1;
+	else if(ret < 0) ret = -1;
+	return ret;
 }
 
 void* memset(void* v,int c,size_t n) {
@@ -76,15 +79,18 @@ void* memcpy(void* out, const void* in, size_t n) {
 
 int memcmp(const void* s1, const void* s2, size_t n){
 	assert(s1 != NULL && s2 != NULL);
-	char *v1 = (char *)s1;
-	char *v2 = (char *)s2;
-	while(n -- && *v1  == *v2 ) {
+	unsigned char *v1 = (unsigned char *)s1;
+	unsigned char *v2 = (unsigned char *)s2;
+	int ret = 0;
+	while(n -- ) {
+		ret = *v1  - *v2;
+		if(ret != 0) break;
 		v1 ++;
 		v2 ++;
 	}
-	
-	if(*v1 == *v2) return 0;
-	return *(unsigned char *)v1 - *(unsigned char *)v2 > 0 ? 1 : -1;
+	if(ret > 0) ret = 1;
+	else if(ret < 0) ret = -1;
+	return ret;
 }
 
 #endif
