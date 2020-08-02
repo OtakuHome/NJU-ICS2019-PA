@@ -14,6 +14,14 @@ extern int PrintString(char *, char *, int, int);
 extern int PrintNum(char *, unsigned long, int, int, int, int, char, int);
 
 int printf(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	char out[MAX_BUF];
+	int len = vsprintf(out, fmt, ap);
+	int i;
+	for( i = 0; i < len; i ++){
+    	_putc(out[i]);
+  	}
 	return 0;
 }
 
@@ -169,8 +177,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         }	/* switch (*fmt) */
 
         fmt ++;
-        int i;
-        for(i = 0; i < length; ++ i) {
+        //int i;
+        for(int i = 0; i < length; ++ i) {
         	out[total_len ++] = buf[i];
         }
         
