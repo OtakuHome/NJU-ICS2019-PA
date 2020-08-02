@@ -118,7 +118,7 @@ make_EHelper(dec) {
   print_asm_template1(dec);
 }
 
-make_EHelper(neg) {
+make_EHelper(neg1) {
   s0 = id_dest->val != 0 ;
   rtl_set_CF(&s0);
   s0 = 0;
@@ -134,6 +134,24 @@ make_EHelper(neg) {
   rtl_set_OF(&s1);
   
   operand_write(id_dest, &s0);
+  print_asm_template1(neg);
+}
+
+make_EHelper(neg) {
+  rtl_mv(&s0,&id_dest->val);
+  rtl_not(&s0,&s0);
+  rtl_addi(&s0,&s0,1);
+  operand_write(id_dest,&s0);
+
+  s1=(id_dest->val!=0);
+  rtl_set_CF(&s1);
+
+  rtl_update_ZFSF(&s0,id_dest->width);
+  rtl_xor(&s1,&s0,&id_dest->val);
+  rtl_not(&s1,&s1);
+  rtl_msb(&s1,&s1,id_dest->width);
+  rtl_set_OF(&s1);
+
   print_asm_template1(neg);
 }
 
