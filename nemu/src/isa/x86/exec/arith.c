@@ -119,8 +119,21 @@ make_EHelper(dec) {
 }
 
 make_EHelper(neg) {
-  TODO();
-
+  s0 = id_dest->val != 0 ;
+  rtl_set_CF(&s0);
+  s0 = 0;
+  rtl_sub(&s0, &s0, &id_dest->val);
+  
+  if (id_dest->width != 4) {
+    rtl_andi(&s0, &s0, 0xffffffffu >> ((4 - id_dest->width) * 8));
+  }
+  
+  rtl_update_ZFSF(&s0,id_dest->width);
+  s1 = 0;
+  rtl_is_sub_overflow(&s1, &s0, &s1, &id_dest->val, id_dest->width);
+  rtl_set_CF(&s1);
+  
+  operand_write(id_dest, &s0);
   print_asm_template1(neg);
 }
 

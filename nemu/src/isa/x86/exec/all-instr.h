@@ -39,6 +39,7 @@ make_EHelper(idiv);
 make_EHelper(imul1);
 make_EHelper(mul);
 make_EHelper(sbb);
+make_EHelper(neg);
 
 
 // logic.c
