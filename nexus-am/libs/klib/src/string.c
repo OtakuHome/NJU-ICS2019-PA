@@ -52,7 +52,7 @@ int strcmp(const char* s1, const char* s2) {
 	
 	int ret = *s1 - *s2;
 	
-	assert(ret == -1);
+	//assert(ret == -1);
 	//ret = 0;
 	//assert(0);
 	if(ret > 0) return 1;
