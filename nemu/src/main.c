@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
   // test_expr();
 
   /* Receive commands from user. */
-  ui_mainloop(is_batch_mode);
+  ui_mainloop(0);
 
   return 0;
 }
