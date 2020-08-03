@@ -20,7 +20,7 @@ int printf(const char *fmt, ...) {
 	int len = vsprintf(out, fmt, ap);
 	int i;
 	for( i = 0; i < len; i ++){
-    	//_putc(out[i]);
+    	_putc(out[i]);
   	}
 	return len;
 }
