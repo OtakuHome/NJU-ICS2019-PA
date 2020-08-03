@@ -52,7 +52,7 @@ make_EHelper(out) {
   rtl_lr(&s0, id_src->reg, id_src->width);
   switch (id_src->width){
   	case 1:
-  		pio_write_l(id_dest->val, s0);
+  		pio_write_b(id_dest->val, s0);
   		break;
   	case 2:
   		pio_write_w(id_dest->val, s0);
