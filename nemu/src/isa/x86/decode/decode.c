@@ -292,7 +292,8 @@ make_DHelper(out_a2I) {
   id_dest->width = 1;
   decode_op_I(pc, id_dest, true);
 }
-
+/* The size of the I/O port being accessed is determined by the opcode for an 8-bit I/O port or by the operand-size attribute of the instruction for a 16- or 32-bit I/O port. 
+ */
 make_DHelper(out_a2dx) {
   decode_op_a(pc, id_src, true);
 

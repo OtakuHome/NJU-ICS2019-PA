@@ -48,7 +48,21 @@ make_EHelper(in) {
 }
 
 make_EHelper(out) {
-  TODO();
+
+  rtl_lr(&s0, id_src->reg, id_src->width);
+  switch (id_src->width){
+  	case 1:
+  		pio_write_l(id_dest->val, s0);
+  		break;
+  	case 2:
+  		pio_write_w(id_dest->val, s0);
+  		break;
+  	case 4:
+		pio_write_l(id_dest->val, s0);
+		break;
+	default:
+		panic("Invalid width");
+  }
 
   print_asm_template2(out);
 }
