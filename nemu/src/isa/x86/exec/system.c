@@ -42,13 +42,31 @@ void pio_write_w(ioaddr_t, uint32_t);
 void pio_write_b(ioaddr_t, uint32_t);
 
 make_EHelper(in) {
-  TODO();
 
+  // the type of dest must be register
+
+  switch (id_dest->width){
+  	case 1:
+  		s0 = pio_read_b(id_src->val);
+  		break;
+  	case 2:
+  		s0 = pio_read_w(id_src->val);
+  		break;
+  	case 4:
+  		s0 = pio_read_l(id_src->val);
+  		break;
+  	default:
+		panic("Invalid width");
+  }
+  
+  operand_write(id_dest, &s0);	// or rtl_sr
+  
   print_asm_template2(in);
 }
 
 make_EHelper(out) {
 
+  // the type of src must be register
   rtl_lr(&s0, id_src->reg, id_src->width);
   switch (id_src->width){
   	case 1:
