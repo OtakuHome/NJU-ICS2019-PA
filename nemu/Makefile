@@ -65,19 +65,19 @@ override ARGS += -d $(QEMU_SO)
 IMG :=
 NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 
-$(BINARY): $(OBJS)
-	# $(call git_commit, "compile")
+# $(call git_commit, "compile")
+$(BINARY): $(OBJS)	
 	@echo + LD $@
 	@$(LD) -O2 -rdynamic $(SO_LDLAGS) -o $@ $^ -lSDL2 -lreadline -ldl
 
 run-env: $(BINARY) $(QEMU_SO)
 
-run: run-env
-	# $(call git_commit, "run")
+# $(call git_commit, "run")
+run: run-env	
 	$(NEMU_EXEC)
 
-gdb: run-env
-	# $(call git_commit, "gdb")
+# $(call git_commit, "gdb")
+gdb: run-env	
 	gdb -s $(BINARY) --args $(NEMU_EXEC)
 count:
 	@echo "Counting the number if lines of the codes(.c .h)"
