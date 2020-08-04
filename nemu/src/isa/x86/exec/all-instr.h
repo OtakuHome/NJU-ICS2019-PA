@@ -8,7 +8,7 @@ make_EHelper(movsx);
 make_EHelper(leave);
 make_EHelper(pop);
 make_EHelper(cltd); // CWD (opcode 99)
-
+make_EHelper(cwtl); // CBW (opcode 98)
 
 // prefix.c
 make_EHelper(operand_size);
