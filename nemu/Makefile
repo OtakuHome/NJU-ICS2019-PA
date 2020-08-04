@@ -74,6 +74,7 @@ run-env: $(BINARY) $(QEMU_SO)
 
 # $(call git_commit, "run")
 run: run-env	
+	@echo "This is a test!"
 	$(NEMU_EXEC)
 
 # $(call git_commit, "gdb")
