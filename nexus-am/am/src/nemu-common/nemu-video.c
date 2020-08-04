@@ -3,6 +3,10 @@
 #include <nemu.h>
 #include <klib.h>
 
+/* PA2.2
+ * Date: 2020/08
+ */
+
 #define W 400
 #define H 300
 

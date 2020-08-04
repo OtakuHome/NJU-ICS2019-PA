@@ -3,6 +3,10 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+/* PA2.2
+ * Date: 2020/08
+ */
+
 /* macros */
 #define	MAX_BUF	1000
 #define		IsDigit(x)	( ((x) >= '0') && ((x) <= '9') )
@@ -267,7 +271,7 @@ PrintNum(char * buf, unsigned long u, int base, int negFlag,
     }
     if (negFlag && !ladjust && (padc == '0')) {
         for (i = actualLength-1; i < length-1; i++) buf[i] = padc; 
-        buf[length -1] = '-';//第一位填'-'
+        buf[length -1] = '-';
     } else {
 	    for (i = actualLength; i < length; i++) buf[i] = padc;
     }
@@ -307,6 +311,7 @@ int sprintf(char *out, const char *fmt, ...) {
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
+	assert(0);
 	return 0;
 }
 

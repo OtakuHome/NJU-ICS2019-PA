@@ -2,6 +2,10 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+/* PA2.2
+ * Date: 2020/08
+ */
+
 size_t strlen(const char *s) {
 	if(s == NULL) return 0;
 	size_t len = 0;

@@ -1,6 +1,11 @@
 #include <am.h>
 #include <amdev.h>
 #include <nemu.h>
+
+/* PA2.2
+ * Date: 2020/08
+ */
+ 
 uint32_t st_time;
 size_t __am_timer_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {

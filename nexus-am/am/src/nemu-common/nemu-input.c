@@ -4,6 +4,9 @@
 
 #define KEYDOWN_MASK 0x8000
 
+/* PA2.2
+ * Date: 2020/08
+ */
 size_t __am_input_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {
     case _DEVREG_INPUT_KBD: {

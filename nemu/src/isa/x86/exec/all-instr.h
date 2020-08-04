@@ -1,4 +1,10 @@
 #include "cpu/exec.h"
+
+/* PA2
+ * Date: 2020/07/27 
+ * Most of those functions are implemented in PA2 .
+ */
+
 // data-move.c
 make_EHelper(mov);
 make_EHelper(push);
