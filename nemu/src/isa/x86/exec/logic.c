@@ -96,3 +96,17 @@ make_EHelper(not) {
   print_asm_template1(not);
 }
 
+make_EHelper(rol) {
+	s0 = id_dest -> val;
+	int i;
+	for(i = 0; i < id_src -> val; ++ i)	{
+		rtl_msb(&s1, &s0, id_dest->width);
+		s0 = s0 << 1;
+		s0 |= s1;
+	}
+	
+	operand_write(id_dest, &s0);
+	
+	print_asm_template2(rol);	
+}
+
