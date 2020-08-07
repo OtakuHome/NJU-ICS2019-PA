@@ -103,7 +103,7 @@ make_EHelper(rol) {
 		rtl_msb(&s1, &s0, id_dest->width);
 		s0 = s0 << 1;
 		s0 |= s1;
-		rtl_set_CF(&s1);	// unnecessary ?
+		rtl_set_CF(&s1);	// unnecessary?
 	}
 	
 	operand_write(id_dest, &s0);
