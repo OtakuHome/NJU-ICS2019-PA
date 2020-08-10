@@ -1,5 +1,6 @@
 #include <am.h>
 #include <x86.h>
+#include <klib.h>
 
 static _Context* (*user_handler)(_Event, _Context*) = NULL;
 
@@ -13,7 +14,13 @@ _Context* __am_irq_handle(_Context *c) {
   if (user_handler) {
     _Event ev = {0};
     switch (c->irq) {
-      default: ev.event = _EVENT_ERROR; break;
+      case 0x81:
+      	ev.event = _EVENT_YIELD;
+      	break;
+      default:
+      	//printf("irq: %d\n", c->irq); 
+      	ev.event = _EVENT_ERROR; 
+      	break;
     }
 
     next = user_handler(ev, c);
