@@ -63,6 +63,16 @@ typedef struct {
 		uint32_t val;
 	} eflags;
 
+	/* PA 3.1
+ 	 * Date: 2020/08/10
+ 	 */
+	uint32_t cs;
+	
+	struct {
+		uint16_t limit;
+		uint32_t base;
+	}IDTR;
+
 } CPU_state;
 
 

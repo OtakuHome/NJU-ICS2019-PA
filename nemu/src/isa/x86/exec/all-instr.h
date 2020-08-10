@@ -17,6 +17,8 @@ make_EHelper(cltd); // CWD (opcode 99)
 make_EHelper(cwtl); // CBW (opcode 98)
 make_EHelper(movsb);
 make_EHelper(movsl);
+make_EHelper(pusha);
+make_EHelper(popa);
 
 // prefix.c
 make_EHelper(operand_size);
@@ -29,6 +31,8 @@ make_EHelper(nemu_trap);
 // system.c
 make_EHelper(out);
 make_EHelper(in);
+make_EHelper(lidt);
+make_EHelper(int);
 
 // control.c
 make_EHelper(call);

@@ -8,7 +8,7 @@
  */
 
 /* macros */
-#define	MAX_BUF	1000
+#define	MAX_BUF	2000
 #define		IsDigit(x)	( ((x) >= '0') && ((x) <= '9') )
 #define		Ctod(x)		( (x) - '0')
 
@@ -142,7 +142,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             }
             length = PrintNum(buf, num, 10, 0, width, ladjust, padc, 0);
             break;
-            
+        case 'p':    
         case 'x':
             if (longFlag) { 
                 num = va_arg(ap, long int);
