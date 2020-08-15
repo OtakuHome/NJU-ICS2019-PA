@@ -6,15 +6,19 @@
  */
 struct _Context {
   struct _AddressSpace *as;
-  uintptr_t edi, esi, ebp, esp, ebs, edx, ecx, eax;
+  uintptr_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
   int irq;
   uintptr_t eip, cs, eflags;
 };
 
+/* PA3.2
+ * Date: 2020/8/14
+ * refers to navy-apps/libs/libos/src/nanos.c
+ */
 #define GPR1 eax
-#define GPR2 eip
-#define GPR3 eip
-#define GPR4 eip
-#define GPRx eip
+#define GPR2 ebx
+#define GPR3 ecx
+#define GPR4 edx
+#define GPRx eax
 
 #endif
