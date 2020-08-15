@@ -1,4 +1,5 @@
 #include "proc.h"
+#include "fs.h"
 #include <elf.h>
 
 #ifdef __ISA_AM_NATIVE__
@@ -14,7 +15,9 @@ extern uint8_t ramdisk_end;
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
-	Elf_Ehdr *ehdr = (Elf_Ehdr *)&ramdisk_start;
+	int fd = fs_open(filename, 0, 0);
+	
+	Elf_Ehdr *ehdr = (Elf_Ehdr *)(&ramdisk_start + file_table[i].disk_offset);
 
 	if (!( ehdr->e_ident[EI_MAG0] == ELFMAG0 &&
 		ehdr->e_ident[EI_MAG1] == ELFMAG1 &&
@@ -27,12 +30,16 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	Elf_Phdr *phdr = (Elf_Phdr *)((char*)ehdr + ehdr->e_phoff); 
 	int num = ehdr -> e_shnum;
 	for(int i = 0; i < num; ++ i ){
-		ramdisk_read((void *)phdr->p_vaddr, phdr->p_offset, phdr->p_filesz);
+		fs_lseek(fd, phdr->p_offset, SEEK_SET);
+		fs_read(fd, (void *)phdr->p_vaddr, phdr->p_filesz);
 		if(phdr->p_filesz < phdr -> p_memsz){
 			memset((void *)phdr->p_vaddr + phdr->p_filesz, 0, phdr->p_memsz - phdr->p_filesz);
 		}
 		++ phdr;
 	}
+	
+	fs_close(fd);
+	
 	return ehdr->e_entry;
 }
 
