@@ -7,6 +7,7 @@ static PCB pcb_boot = {};
 PCB *current = NULL;
 
 void naive_uload(PCB *pcb, const char *filename);
+void context_kload(PCB *pcb, void *entry);
 
 void switch_boot_pcb() {
   current = &pcb_boot;
@@ -22,15 +23,19 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
+  context_kload(&pcb[0], (void *)hello_fun);
   switch_boot_pcb();
 
   Log("Initializing processes...");
 
   // load program here
-  naive_uload(NULL, "/bin/init");
+  // naive_uload(NULL, "/bin/init");
   
 }
 
 _Context* schedule(_Context *prev) {
-  return NULL;
+  current->cp = prev;
+  current = &pcb[0];
+  
+  return current->cp;
 }
