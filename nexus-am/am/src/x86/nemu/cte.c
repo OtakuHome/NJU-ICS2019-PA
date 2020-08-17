@@ -58,7 +58,9 @@ int _cte_init(_Context*(*handler)(_Event, _Context*)) {
 }
 
 _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
+  //printf("stack.start: [%x], stack.end: [%x]\n", stack.start, stack.end);
   _Context *cp = (_Context *)stack.end - 1;
+  //printf("cp's address: [%x]\n", &cp);
   cp->cs = 8;
   cp->eip = (uintptr_t)entry;
   return cp;

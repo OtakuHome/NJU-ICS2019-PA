@@ -6,6 +6,7 @@
 #endif
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
+	_yield();	//模拟设备访问缓慢的情况
   	char *str = (char *)buf;
 	size_t i = 0;
 	for(i = 0; i < len; ++ i) _putc(str[i]);
@@ -21,6 +22,7 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t events_read(void *buf, size_t offset, size_t len) {
+  _yield();
   int keycode = read_key();
   if(keycode != _KEY_NONE) {
   	if(keycode & KEYDOWN_MASK) {
@@ -48,6 +50,7 @@ size_t dispinfo_len(){
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
+  _yield();
   offset /= 4;
   int x= offset % screen_width(); 
   int y= offset / screen_width();

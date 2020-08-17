@@ -1,6 +1,7 @@
 #include <am.h>
 #include <x86.h>
 #include <nemu.h>
+#include <klib.h> 
 
 #define PG_ALIGN __attribute((aligned(PGSIZE)))
 
@@ -84,5 +85,9 @@ int _map(_AddressSpace *as, void *va, void *pa, int prot) {
 }
 
 _Context *_ucontext(_AddressSpace *as, _Area ustack, _Area kstack, void *entry, void *args) {
-  return NULL;
+   //printf("start: %x, end: %x\n", ustack.start, ustack.end);
+  _Context *cp = (_Context *)(ustack.end - 12) - 1;
+  cp->cs = 8;
+  cp->eip = (uintptr_t)entry;
+  return cp;
 }
