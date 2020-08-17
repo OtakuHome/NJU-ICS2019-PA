@@ -40,7 +40,7 @@ static Finfo file_table[] __attribute__((used)) = {
   {"/dev/fb", 0, 0, 0, invalid_read, fb_write},
   {"/dev/fbsync", 0, 0, 0, invalid_read, fbsync_write},
   {"/proc/dispinfo", 0, 0, 0, dispinfo_read, invalid_write},
-  
+  {"/dev/tty", 0, 0, 0, invalid_read, serial_write}
 };
 
 #define NR_FILES (sizeof(file_table) / sizeof(file_table[0]))
@@ -64,7 +64,7 @@ int fs_open(const char *pathname, int flags, int mode){
 			return i;
 		}
 	}
-	panic("There is no such pathname");
+	panic("There is no such pathname: [%s]", pathname);
 	return -1;
 }
 size_t fs_read(int fd, void *buf, size_t len){
