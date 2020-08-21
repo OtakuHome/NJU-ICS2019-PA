@@ -16,7 +16,7 @@ paddr_t page_translate(vaddr_t addr) {
 	Assert(pde.present, "pde: %d, addr: 0x%08x", pde.val, addr);
 	PTE pte;
 	pte.val = paddr_read(PTE_ADDR(pde.val) + PTX(addr) * 4 , 4);
-	assert(pte.present);
+	Assert(pte.present, "pte: %d, addr: 0x%08x", pte.val, addr);
 	paddr_t paddr = PTE_ADDR(pte.val) | OFF(addr);
 	return paddr;
 }
@@ -24,15 +24,19 @@ paddr_t page_translate(vaddr_t addr) {
 uint32_t isa_vaddr_read(vaddr_t addr, int len) {
   // data cross the page boundary
   if( OFF(addr) + len > PAGE_SIZE) {
+    //Log("data cross the page read. addr: 0x%08x", addr);
   	uint32_t low_addr, high_addr;
+  	//Log("lowaddr: 0x%08x", addr);
   	int low_len = PAGE_SIZE - OFF(addr);
   	int high_len = len - low_len;
   	low_addr = page_translate(addr);
-  	addr &= PAGE_MASK;
-  	addr += PAGE_SIZE;
+  	addr |= PAGE_MASK;
+  	addr ++;
+  	//Log("high_addr: 0x%08x", addr);
   	high_addr = page_translate(addr);
-  	return paddr_read(high_addr, high_len) << (high_len * 8) | paddr_read(low_addr, low_len);
+  	return (paddr_read(high_addr, high_len) << (low_len * 8)) | paddr_read(low_addr, low_len);
   }
+  //Log("data not cross the page read. addr: 0x%08x", addr);
   paddr_t paddr = page_translate(addr);
   
   return paddr_read(paddr, len);

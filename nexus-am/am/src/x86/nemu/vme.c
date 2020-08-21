@@ -61,7 +61,10 @@ int _protect(_AddressSpace *as) {
   as->ptr = updir;
   // map kernel space
   for (int i = 0; i < NR_PDE; i ++) {
-    updir[i] = kpdirs[i];
+  	updir[i] = kpdirs[i];
+    //PTE pte = PGADDR(i, 0, 0);
+    //PTE pte_end = PGADDR(i + 1, 0, 0);
+    //printf("copy: [0x%08x, 0x%08x), pde: %d\n", pte, pte_end, updir[i]);
   }
 
   return 0;

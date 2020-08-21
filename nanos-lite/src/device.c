@@ -22,7 +22,7 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t events_read(void *buf, size_t offset, size_t len) {
-  _yield();
+  //_yield();
   int keycode = read_key();
   if(keycode != _KEY_NONE) {
   	if(keycode & KEYDOWN_MASK) {
