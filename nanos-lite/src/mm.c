@@ -39,7 +39,7 @@ int is_mapped(_AddressSpace *as, uintptr_t va)
 
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk, intptr_t increment) {
-  //Log("brk: 0x%08x increment: %d", brk, increment);
+  Log("brk: 0x%08x increment: %d", brk, increment);
   if(current->max_brk == 0){
     current->max_brk = brk;
     //Log("register max_brk: %d", brk);
