@@ -92,7 +92,9 @@ int _map(_AddressSpace *as, void *va, void *pa, int prot) {
   PDE *pgdir = as->ptr;
   if(!(pgdir[PDX(va)] & PTE_P )) {
     // 分配页面地址已经与4KB对齐了，因此不需要使用PTE_ADDR了
-  	pgdir[PDX(va)] = (uintptr_t)pgalloc_usr(1) | PTE_P;
+    uintptr_t pa = pgalloc_usr(1);
+    assert(pa % PGSIZE == 0);
+  	pgdir[PDX(va)] = pa | PTE_P;
   }
   PDE pde = pgdir[PDX(va)];
   //printf("_map: va: 0x%08x, pde: %d\n", va, pde);
