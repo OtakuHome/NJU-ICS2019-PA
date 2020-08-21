@@ -54,16 +54,16 @@ void _exit(int status) {
 }
 
 int _open(const char *path, int flags, mode_t mode) {
-  return _syscall_(SYS_open, path, flags, mode);
+  return _syscall_(SYS_open, (uintptr_t)path, flags, mode);
 }
 
 int _write(int fd, void *buf, size_t count) {
-  return _syscall_(SYS_write, fd, buf, count);
+  return _syscall_(SYS_write, fd, (uintptr_t)buf, count);
 }
 
 void *_sbrk(intptr_t increment) {
   extern char end;
-  static intptr_t program_break = &end;
+  static intptr_t program_break = (uintptr_t)&end;
   intptr_t prev_break = program_break;
   // I think this `_syscall_` is actually `brk`
   if(_syscall_(SYS_brk, program_break, increment, 0) == 0) {
@@ -75,7 +75,7 @@ void *_sbrk(intptr_t increment) {
 }
 
 int _read(int fd, void *buf, size_t count) {
-  return _syscall_(SYS_read, fd, buf, count);
+  return _syscall_(SYS_read, fd, (uintptr_t)buf, count);
 }
 
 int _close(int fd) {
@@ -87,7 +87,7 @@ off_t _lseek(int fd, off_t offset, int whence) {
 }
 
 int _execve(const char *fname, char * const argv[], char *const envp[]) {
-  return _syscall_(SYS_execve, fname, argv, envp);
+  return _syscall_(SYS_execve, (uintptr_t)fname, (uintptr_t)argv, (uintptr_t)envp);
 }
 
 // The code below is not used by Nanos-lite.
