@@ -59,6 +59,7 @@ int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) {
 int _protect(_AddressSpace *as) {
   PDE *updir = (PDE*)(pgalloc_usr(1));
   as->ptr = updir;
+  //printf("_protecting... as: 0x%08x, as->ptr: 0x%08x\n", as, as->ptr);
   // map kernel space
   for (int i = 0; i < NR_PDE; i ++) {
   	updir[i] = kpdirs[i];
@@ -92,13 +93,16 @@ int _map(_AddressSpace *as, void *va, void *pa, int prot) {
   PDE *pgdir = as->ptr;
   if(!(pgdir[PDX(va)] & PTE_P )) {
     // 分配页面地址已经与4KB对齐了，因此不需要使用PTE_ADDR了
-    uintptr_t pa = pgalloc_usr(1);
+    uintptr_t pa = (uintptr_t)pgalloc_usr(1);
     assert(pa % PGSIZE == 0);
   	pgdir[PDX(va)] = pa | PTE_P;
   }
   PDE pde = pgdir[PDX(va)];
   //printf("_map: va: 0x%08x, pde: %d\n", va, pde);
   PTE *pgtable = (PTE *)(PTE_ADDR(pde));
+  if(pgtable[PTX(va)] & PTE_P){
+  	printf("remapped! srcva: 0x%08x -> pa: 0x%08x, curva: 0x%08x -> pa: 0x%08x\n", va, PTE_ADDR(pgtable[PTX(va)]), va, PTE_ADDR(pa));
+  }
   pgtable[PTX(va)] = (uintptr_t)PTE_ADDR(pa) | prot ;
   //printf("_map success. va: 0x%08x, pa: 0x%08x, prot: %d\n", va, pa, prot);
   return 0;

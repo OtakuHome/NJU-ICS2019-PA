@@ -64,7 +64,7 @@ void load_single(int fd, PCB *pcb, uint32_t va, uint32_t bin_size, uint32_t sgsi
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
     _protect(&(pcb->as));
-    //Log("_protect success. as->ptr: 0x%08x", (pcb->as).ptr);
+    //Log("_protect success. pcb: 0x%08x, pcb->as->ptr: 0x%08x", pcb, (pcb->as).ptr);
 	int fd = fs_open(filename, 0, 0);
 	Elf_Ehdr ehdr;
 	fs_lseek(fd, 0, SEEK_SET);

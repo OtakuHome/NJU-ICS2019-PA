@@ -16,6 +16,7 @@ _Context* do_syscall(_Context *c) {
   a[3] = c->GPR4;
   switch (a[0]) {
   	case SYS_exit:
+  	    printf("SYS_exit called...\n");
   	    _halt(a[1]);
     	//naive_uload(NULL, "/bin/init");
     	c->GPRx = 0;

@@ -25,6 +25,7 @@ void free_page(void *p) {
 
 int is_mapped(_AddressSpace *as, uintptr_t va)
 {
+    //Log("check is mapped: 0x%08x", va);
 	uint32_t *pgdir = as->ptr;
 	if(!(pgdir[PDX(va)] & PTE_P )) {
 		return 0;
@@ -39,7 +40,7 @@ int is_mapped(_AddressSpace *as, uintptr_t va)
 
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk, intptr_t increment) {
-  Log("brk: 0x%08x increment: %d", brk, increment);
+  //Log("brk: 0x%08x increment: %d", brk, increment);
   if(current->max_brk == 0){
     current->max_brk = brk;
     //Log("register max_brk: %d", brk);
@@ -50,10 +51,10 @@ int mm_brk(uintptr_t brk, intptr_t increment) {
   	uintptr_t va = current->max_brk;
   	// 内存不对齐的情况，同时该地址有没有映射到物理页上
   	if(!is_mapped(&(current->as), va) && va % PGSIZE != 0) {
+  	    //Log("check is_mapped false: 0x%08x", va);
   		_map(&(current->as), (void *)va, new_page(1), PTE_P);
-  		va = PGROUNDUP(va);
   	} 
-  	
+  	va = PGROUNDUP(va);
   	while(va < brk + increment) {
   		_map(&(current->as), (void *)va, new_page(1), PTE_P);
   		va += PGSIZE;

@@ -6,6 +6,7 @@
 #endif
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
+    //printf("serial_write\n");
 	//_yield();	//模拟设备访问缓慢的情况
   	char *str = (char *)buf;
 	size_t i = 0;
