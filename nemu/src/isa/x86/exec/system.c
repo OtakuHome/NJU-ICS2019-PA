@@ -40,10 +40,6 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-  rtl_push(&cpu.eflags.val);
-  rtl_push(&cpu.cs);
-  rtl_push(&decinfo.seq_pc);
-  
   raise_intr(id_dest->val, decinfo.seq_pc);
   
   print_asm("int %s", id_dest->str);

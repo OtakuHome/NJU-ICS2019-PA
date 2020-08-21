@@ -114,5 +114,6 @@ _Context *_ucontext(_AddressSpace *as, _Area ustack, _Area kstack, void *entry, 
   cp->as = as;
   cp->cs = 8;
   cp->eip = (uintptr_t)entry;
+  cp->eflags = (1 << 9);
   return cp;
 }

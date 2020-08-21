@@ -23,6 +23,9 @@ _Context* __am_irq_handle(_Context *c) {
       case 0x80:
       	ev.event = _EVENT_SYSCALL;
       	break;
+      case 0x20: // 32
+        ev.event = _EVENT_IRQ_TIMER;
+        break;
       default:
       	//printf("irq: %d\n", c->irq); 
       	ev.event = _EVENT_ERROR; 

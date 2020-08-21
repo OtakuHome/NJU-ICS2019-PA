@@ -27,10 +27,11 @@ void hello_fun(void *arg) {
 void init_proc() {
 
   Log("Initializing processes...");
-  register_pcb(&pcb[1]);
+  //register_pcb(&pcb[1]);
   //context_kload(&pcb[0], (void *)hello_fun);
-  context_uload(&pcb[0], "/bin/init");
-  //context_uload(&pcb[1], "/bin/pal");
+  context_uload(&pcb[0], "/bin/pal");
+  context_uload(&pcb[1], "/bin/hello");
+  
   //context_uload(&pcb[0], "/bin/dummy");
   //naive_uload(NULL, "/bin/dummy");
   switch_boot_pcb();
@@ -42,8 +43,14 @@ void init_proc() {
 
 _Context* schedule(_Context *prev) {
   current->cp = prev;
+  static int time_piece = 0;	//时间片
   //current = &pcb[0];
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  Log("schedule success. current PCB: 0x%08x", current);
+  if(time_piece <= 0) {
+  	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  	if(current == &pcb[0]) time_piece = 100;
+  	else time_piece = 1;
+  }
+  -- time_piece;
+  //Log("schedule success. current PCB: 0x%08x", current);
   return current->cp;
 }
