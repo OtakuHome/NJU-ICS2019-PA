@@ -9,6 +9,7 @@ PCB *current = NULL;
 void naive_uload(PCB *pcb, const char *filename);
 void context_kload(PCB *pcb, void *entry);
 void context_uload(PCB *pcb, const char *filename);
+void register_pcb(PCB *pcb);
 
 void switch_boot_pcb() {
   current = &pcb_boot;
@@ -26,9 +27,9 @@ void hello_fun(void *arg) {
 void init_proc() {
 
   Log("Initializing processes...");
-  
+  register_pcb(&pcb[1]);
   //context_kload(&pcb[0], (void *)hello_fun);
-  context_uload(&pcb[0], "/bin/dummy");
+  context_uload(&pcb[0], "/bin/init");
   //context_uload(&pcb[1], "/bin/pal");
   //context_uload(&pcb[0], "/bin/dummy");
   //naive_uload(NULL, "/bin/dummy");
@@ -41,7 +42,8 @@ void init_proc() {
 
 _Context* schedule(_Context *prev) {
   current->cp = prev;
-  current = &pcb[0];
-  //current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  //current = &pcb[0];
+  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  Log("schedule success. current PCB: 0x%08x", current);
   return current->cp;
 }

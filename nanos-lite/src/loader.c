@@ -30,8 +30,8 @@ typedef uint32_t PDE;
 extern uint8_t ramdisk_start;
 extern uint8_t ramdisk_end;
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
-
-
+void context_uload(PCB *pcb, const char *filename);
+PCB* pcb_load;
 
 void load_single(int fd, PCB *pcb, uint32_t va, uint32_t bin_size, uint32_t sgsize)
 {
@@ -61,6 +61,9 @@ void load_single(int fd, PCB *pcb, uint32_t va, uint32_t bin_size, uint32_t sgsi
     }
 }
 
+void register_pcb(PCB *pcb) {
+	pcb_load = pcb;
+}
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
     _protect(&(pcb->as));
@@ -97,11 +100,22 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	}
 	
 	fs_close(fd);
-	
+	Log("load %s success. PCB: 0x%08x", filename, pcb);
 	return ehdr.e_entry;
 }
 
+/* 支持开机菜单程序的运行 (选做)
+ * Date: 2020/08/21
+ * 大概完成了这个功能。在pro.c中调用register函数，即设置pcb_load为 &pcb[1], 这个pcb_load专门用于加载程序
+ * 然后pcb[0] 就是正常的/bin/init即可，schedule函数中pcb[0] 和 pcb[1]相互切换即可.
+ * device.c中把读写函数中的_yield去掉，程序就能一直执行下去了
+ */
 void naive_uload(PCB *pcb, const char *filename) {
+  if(pcb == NULL) {
+  	context_uload(pcb_load, filename);
+    _yield();
+  	return ;
+  }
   uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %x", entry);
   ((void(*)())entry) ();
@@ -111,8 +125,14 @@ void context_kload(PCB *pcb, void *entry) {
   _Area stack;
   stack.start = pcb->stack;
   stack.end = stack.start + sizeof(pcb->stack);
-
+  
   pcb->cp = _kcontext(stack, entry, NULL);
+  /* PA4.2 
+   * Date: 2020/08/21
+   * 修复缺页错误 (选做)
+   */
+  _protect(&(pcb->as));
+  pcb->cp->as = &(pcb->as);
 }
 
 void context_uload(PCB *pcb, const char *filename) {
