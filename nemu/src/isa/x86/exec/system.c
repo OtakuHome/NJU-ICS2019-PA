@@ -14,10 +14,10 @@ make_EHelper(lidt) {
 make_EHelper(mov_r2cr) {
   if(id_dest->reg == 0) {
   	cpu.cr0.val = id_src->val;
-  	printf("cr0: %x\n", cpu.cr0.val);
+  	//printf("cr0: %x\n", cpu.cr0.val);
   }else if(id_dest->reg == 3) {
   	cpu.cr3.val = id_src->val;
-  	printf("cr3: %x\n", cpu.cr3.val);
+  	//printf("cr3: %x\n", cpu.cr3.val);
   }else{
   	assert(0);
   }

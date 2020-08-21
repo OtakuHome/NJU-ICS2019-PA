@@ -50,6 +50,7 @@ size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
+  Log("Initializing file system...");
   int fd = fs_open("/dev/fb", 0, 0);
   file_table[fd].size = sizeof(uint32_t) * screen_height() * screen_width();
   fd = fs_open("/proc/dispinfo", 0, 0);

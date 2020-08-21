@@ -12,12 +12,13 @@
 paddr_t page_translate(vaddr_t addr) {
 	if(!cpu.cr0.paging) return addr;
 	PDE pde;
-	pde.val = paddr_read(cpu.cr3.val + PDX(addr) * 4, 4);
-	assert(pde.present);
+	pde.val = paddr_read(PTE_ADDR(cpu.cr3.val) + PDX(addr) * 4, 4);
+	Assert(pde.present, "pde: %d, addr: 0x%08x", pde.val, addr);
 	PTE pte;
 	pte.val = paddr_read(PTE_ADDR(pde.val) + PTX(addr) * 4 , 4);
 	assert(pte.present);
-	return PTE_ADDR(pte.val) | OFF(addr);
+	paddr_t paddr = PTE_ADDR(pte.val) | OFF(addr);
+	return paddr;
 }
 
 uint32_t isa_vaddr_read(vaddr_t addr, int len) {
@@ -33,11 +34,14 @@ uint32_t isa_vaddr_read(vaddr_t addr, int len) {
   	return paddr_read(high_addr, high_len) << (high_len * 8) | paddr_read(low_addr, low_len);
   }
   paddr_t paddr = page_translate(addr);
+  
   return paddr_read(paddr, len);
 }
 
 void isa_vaddr_write(vaddr_t addr, uint32_t data, int len) {
   if( OFF(addr) + len > PAGE_SIZE) {
+  	assert(0);
+  	/*
   	uint32_t low_addr, high_addr;
   	int low_len = PAGE_SIZE - OFF(addr);
   	int high_len = len - low_len;
@@ -47,6 +51,7 @@ void isa_vaddr_write(vaddr_t addr, uint32_t data, int len) {
   	high_addr = page_translate(addr);
   	paddr_write(low_addr, data & ((1 << (low_len * 8)) - 1), low_len);
   	paddr_write(high_addr, data >> (low_len * 8), high_len);
+  	*/
   }
   paddr_t paddr = page_translate(addr);
   paddr_write(paddr, data, len);

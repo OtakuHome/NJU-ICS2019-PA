@@ -66,7 +66,7 @@ void *_sbrk(intptr_t increment) {
   static intptr_t program_break = &end;
   intptr_t prev_break = program_break;
   // I think this `_syscall_` is actually `brk`
-  if(_syscall_(SYS_brk, program_break + increment, 0, 0) == 0) {
+  if(_syscall_(SYS_brk, program_break, increment, 0) == 0) {
   	program_break += increment;
   	return (void *)prev_break;
   }else{

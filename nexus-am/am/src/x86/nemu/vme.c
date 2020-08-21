@@ -11,6 +11,7 @@ static void* (*pgalloc_usr)(size_t) = NULL;
 static void (*pgfree_usr)(void*) = NULL;
 static int vme_enable = 0;
 
+
 static _Area segments[] = {      // Kernel memory mappings
   {.start = (void*)0,          .end = (void*)PMEM_SIZE},
   {.start = (void*)MMIO_BASE,  .end = (void*)(MMIO_BASE + MMIO_SIZE)}
@@ -33,6 +34,7 @@ int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) {
   for (i = 0; i < NR_KSEG_MAP; i ++) {
     uint32_t pdir_idx = (uintptr_t)segments[i].start / (PGSIZE * NR_PTE);
     uint32_t pdir_idx_end = (uintptr_t)segments[i].end / (PGSIZE * NR_PTE);
+    //printf("[0x%08x 0x%08x]\n", segments[i].start, segments[i].end);
     for (; pdir_idx < pdir_idx_end; pdir_idx ++) {
       // fill PDE
       kpdirs[pdir_idx] = (uintptr_t)ptab | PTE_P;
@@ -80,13 +82,27 @@ void __am_switch(_Context *c) {
   }
 }
 
+
 int _map(_AddressSpace *as, void *va, void *pa, int prot) {
+  assert(get_cr0() & CR0_PG);
+  assert(as->ptr);
+  PDE *pgdir = as->ptr;
+  if(!(pgdir[PDX(va)] & PTE_P )) {
+    // 分配页面地址已经与4KB对齐了，因此不需要使用PTE_ADDR了
+  	pgdir[PDX(va)] = (uintptr_t)pgalloc_usr(1) | PTE_P;
+  }
+  PDE pde = pgdir[PDX(va)];
+  //printf("_map: va: 0x%08x, pde: %d\n", va, pde);
+  PTE *pgtable = (PTE *)(PTE_ADDR(pde));
+  pgtable[PTX(va)] = (uintptr_t)PTE_ADDR(pa) | prot ;
+  //printf("_map success. va: 0x%08x, pa: 0x%08x, prot: %d\n", va, pa, prot);
   return 0;
 }
 
 _Context *_ucontext(_AddressSpace *as, _Area ustack, _Area kstack, void *entry, void *args) {
    //printf("start: %x, end: %x\n", ustack.start, ustack.end);
   _Context *cp = (_Context *)(ustack.end - 12) - 1;
+  cp->as = as;
   cp->cs = 8;
   cp->eip = (uintptr_t)entry;
   return cp;
