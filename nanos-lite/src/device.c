@@ -5,6 +5,8 @@
 #define KEYDOWN_MASK 0x8000
 #endif
 
+void switch_fgpcb(int index);
+
 size_t serial_write(const void *buf, size_t offset, size_t len) {
     //printf("serial_write\n");
 	//_yield();	//模拟设备访问缓慢的情况
@@ -24,18 +26,23 @@ static const char *keyname[256] __attribute__((used)) = {
 
 size_t events_read(void *buf, size_t offset, size_t len) {
   //_yield();
+  
   int keycode = read_key();
   if(keycode != _KEY_NONE) {
   	if(keycode & KEYDOWN_MASK) {
   		keycode ^= KEYDOWN_MASK;
   		sprintf(buf, "kd %s\n", keyname[keycode]);
+  		if(strlen(keyname[keycode]) > 1 && keyname[keycode][0] == 'F') {
+  			int index = keyname[keycode][1] - '0';
+  			if(index >= 1 && index <= 3) switch_fgpcb(index);
+  		}
   	}else{
   		sprintf(buf, "ku %s\n", keyname[keycode]);
   	}
   }else{
   	sprintf(buf, "t %u\n", uptime());
   }
-  
+  // Log("receive events %s", (char *)buf);
   return strlen(buf);
 }
 

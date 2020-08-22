@@ -5,14 +5,24 @@
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
+PCB* fg_pcb;
 
 void naive_uload(PCB *pcb, const char *filename);
 void context_kload(PCB *pcb, void *entry);
 void context_uload(PCB *pcb, const char *filename);
 void register_pcb(PCB *pcb);
 
+int time_piece = 0; //时间片
+
 void switch_boot_pcb() {
   current = &pcb_boot;
+  time_piece = 0;
+}
+
+void switch_fgpcb(int index){
+	assert(index < 4);
+	Log("fg_pcb switch to %d", index);
+	fg_pcb = &pcb[index];
 }
 
 void hello_fun(void *arg) {
@@ -27,11 +37,14 @@ void hello_fun(void *arg) {
 void init_proc() {
 
   Log("Initializing processes...");
-  //register_pcb(&pcb[1]);
   //context_kload(&pcb[0], (void *)hello_fun);
-  context_uload(&pcb[0], "/bin/pal");
-  context_uload(&pcb[1], "/bin/hello");
   
+  context_uload(&pcb[0], "/bin/hello");
+  context_uload(&pcb[1], "/bin/init");
+  context_uload(&pcb[2], "/bin/pal");
+  context_uload(&pcb[3], "/bin/events");
+  switch_fgpcb(1);
+  //context_uload(&pcb[1], "/bin/pal");
   //context_uload(&pcb[0], "/bin/dummy");
   //naive_uload(NULL, "/bin/dummy");
   switch_boot_pcb();
@@ -43,14 +56,11 @@ void init_proc() {
 
 _Context* schedule(_Context *prev) {
   current->cp = prev;
-  static int time_piece = 0;	//时间片
-  //current = &pcb[0];
-  if(time_piece <= 0) {
-  	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  	if(current == &pcb[0]) time_piece = 100;
-  	else time_piece = 1;
+  // 每个进程的时间片不一样，fg_pcb优先级较高
+  if(time_piece <= 0){
+  	current = (current == &pcb[0] ? fg_pcb : &pcb[0]);
+  	time_piece = (current == &pcb[0] ? 1 : 100);
   }
   -- time_piece;
-  //Log("schedule success. current PCB: 0x%08x", current);
   return current->cp;
 }

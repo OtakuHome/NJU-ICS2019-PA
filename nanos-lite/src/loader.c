@@ -31,7 +31,11 @@ extern uint8_t ramdisk_start;
 extern uint8_t ramdisk_end;
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 void context_uload(PCB *pcb, const char *filename);
+void switch_boot_pcb();
+
 PCB* pcb_load;
+extern PCB* fg_pcb;
+
 
 void load_single(int fd, PCB *pcb, uint32_t va, uint32_t bin_size, uint32_t sgsize)
 {
@@ -61,8 +65,9 @@ void load_single(int fd, PCB *pcb, uint32_t va, uint32_t bin_size, uint32_t sgsi
     }
 }
 
-void register_pcb(PCB *pcb) {
-	pcb_load = pcb;
+void register_pcb(PCB *pcb_t) {
+    printf("pcb_load: 0x%08x\n", pcb_t);
+	pcb_load = pcb_t;
 }
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
@@ -104,15 +109,26 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	return ehdr.e_entry;
 }
 
-/* 支持开机菜单程序的运行 (选做)
+/* 支持开机菜单程序的运行 (选做) (旧版本)
  * Date: 2020/08/21
  * 大概完成了这个功能。在pro.c中调用register函数，即设置pcb_load为 &pcb[1], 这个pcb_load专门用于加载程序
- * 然后pcb[0] 就是正常的/bin/init即可，schedule函数中pcb[0] 和 pcb[1]相互切换即可.
- * device.c中把读写函数中的_yield去掉，程序就能一直执行下去了
+ * 然后pcb[0] 就是正常的/bin/init即可，schedule函数中pcb[0] 和 pcb[1]相互切换即可. 
+ * device.c中把读写函数中的_yield去掉，程序就能一直执行下去了.
  */
+ 
+ /* 支持开机菜单程序的运行 (选做) (更新)
+ * Date: 2020/08/21
+ * 大概完成了这个功能。在native_uload中调用register函数，即设置pcb_load, 这个pcb_load专门用于加载程序
+ * pcb_load和加载/bin/init的要pcb要保持一致. 这里直接使用fg_pcb了. 
+ * 注意要调用switch_boot_pcb，不然current还是之前的pcb,这样就不对了
+ */
+ 
 void naive_uload(PCB *pcb, const char *filename) {
   if(pcb == NULL) {
+    register_pcb(fg_pcb);
   	context_uload(pcb_load, filename);
+  	pcb_load->max_brk = 0;	// 注意要清零
+  	switch_boot_pcb();
     _yield();
   	return ;
   }
