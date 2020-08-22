@@ -12,7 +12,8 @@ void context_kload(PCB *pcb, void *entry);
 void context_uload(PCB *pcb, const char *filename);
 void register_pcb(PCB *pcb);
 
-int time_piece = 0; //时间片
+//时间片, 在switch_boot_pcb里初始化为0, 在switch_fgpcb也可以初始化为0，这样就能立马切换程序.
+int time_piece = 0; 
 
 void switch_boot_pcb() {
   current = &pcb_boot;
@@ -23,6 +24,7 @@ void switch_fgpcb(int index){
 	assert(index < 4);
 	Log("fg_pcb switch to %d", index);
 	fg_pcb = &pcb[index];
+	time_piece = 0;
 }
 
 void hello_fun(void *arg) {

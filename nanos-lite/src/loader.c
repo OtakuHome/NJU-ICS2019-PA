@@ -87,8 +87,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 		assert(0);
 	}
   
-    
-    
 	Elf_Phdr phdr; 
 	int num = ehdr.e_shnum;
 	for(int i = 0; i < num; ++ i){
