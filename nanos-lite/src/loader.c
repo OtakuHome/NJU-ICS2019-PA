@@ -16,7 +16,6 @@ typedef uint32_t PDE;
 #define PDX(va)          (((uint32_t)(va) >> PDXSHFT) & 0x3ff)
 #define PTX(va)          (((uint32_t)(va) >> PTXSHFT) & 0x3ff)
 #define OFF(va)          ((uint32_t)(va) & 0xfff)
-#define ROUNDUP(a, sz)   ((((uintptr_t)a)+(sz)-1) & ~((sz)-1))
 #define ROUNDDOWN(a, sz) ((((uintptr_t)a)) & ~((sz)-1))
 #define PTE_ADDR(pte)    ((uint32_t)(pte) & ~0xfff)
 #define PGSIZE 4096
